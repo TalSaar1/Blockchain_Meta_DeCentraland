@@ -8,5 +8,13 @@ module.exports = {
     develop: {
       port: 7545
     }
+  },
+  compilers: {
+    solc: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
   }
 };

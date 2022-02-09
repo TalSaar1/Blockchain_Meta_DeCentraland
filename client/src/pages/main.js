@@ -1,67 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import MapContract from '../contracts/Map.json';
-import getWeb3 from '../getWeb3';
+import React from 'react';
+import styled from 'styled-components';
 
-import Map from './map';
+const Container = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin-top: 60px;
+  text-align: center;
+`;
 
-function Main() {
-  const [web3, setWeb3] = useState(undefined);
-  const [accounts, setAccounts] = useState([]);
-  const [contract, setContract] = useState([]);
-  const [map, setMap] = useState([]);
+const Header = styled.div`
+  font-size: ${props => props.big ? "50px" : "42px"};
+  padding: 20px;
+`;
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        // Get network provider and web3 instance.
-        const web3 = await getWeb3();
+const Buttons = styled.div`
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 600px;
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+`;
 
-        // Use web3 to get the user's accounts.
-        const accounts = await web3.eth.getAccounts();
-  
-        // Get the contract instance.
-        const networkId = await web3.eth.net.getId();
-        const deployedNetwork = MapContract.networks[networkId];
-        const contract = new web3.eth.Contract(
-          MapContract.abi,
-          deployedNetwork && deployedNetwork.address,
-        );
-  
-        // Set web3, accounts, and contract to the state, and then proceed with an
-        // example of interacting with the contract's methods.
-        setWeb3(web3);
-        setAccounts(accounts);
-        setContract(contract);
-      } catch (error) {
-        // Catch any errors for any of the above operations.
-        console.log('Failed to load web3, accounts, or contract.');
-        console.error(error);
-      }
-    }
-    init();
-  }, []);
+const Button = styled.button`
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  background-color: #66ff99;
+  border: 0;
+  border-radius: 35px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.02, 0.01, 0.47, 1);
+  margin: 30px;
 
-  useEffect(() => {
-    const load = async () => {
-      if (typeof contract.methods === 'undefined')
-        return;
+  &:hover {
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.16);
+    transform: translate(0, -5px);
+  }
+`;
 
-      const response = await contract.methods.getMap().call();
-      setMap(response)
-    }
-
-    if (typeof web3 !== 'undefined' 
-        && typeof accounts !== 'undefined'
-        && typeof contract !== 'undefined') {
-      load();
-    }
-  }, [web3, accounts, contract])
-
+function Main({ setOwner }) {
   return (
-    <>
-      {typeof web3 === 'undefined' ? 'Loading Web3, accounts, and contract...' : <Map map={map} buyLand={async (row, col) => console.log(await contract.methods.buyLand(row, col).call()) } />}
-    </>
-  );
+    <Container>
+      <Header big>Welcome to Meta DeCentraland</Header>
+      <Header small>Enter As:<Header/>
+      </Header>
+      <Buttons>
+        <Button type='button' onClick={() => setOwner(true)}>Owner</Button>
+        <Button type='button' onClick={() => setOwner(false)}>Guset</Button>
+      </Buttons>
+    </Container>
+  )
 }
 
 export default Main;
