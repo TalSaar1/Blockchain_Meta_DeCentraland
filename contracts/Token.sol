@@ -22,6 +22,10 @@ contract Token {
         emit Transfer(address(0), msg.sender, totalSupply);
     }
 
+    /*function balanceOf() public returns (uint256) {
+        return balanceOf[msg.sender];
+    }*/
+
     function transfer(address _to, uint256 _value) public returns (bool success) {
         require(balanceOf[msg.sender] >= _value, "Not enough tokens to transfer");
         

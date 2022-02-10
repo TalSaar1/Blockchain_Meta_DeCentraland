@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import WorldContract from './contracts/World.json';
-//import TokenContract from './contracts/Token.json';
-//import TokenSaleContract from './contracts/TokenSale.json';
+import TokenContract from './contracts/Token.json';
 import getWeb3 from './getWeb3';
 import Navbar from './components/navbar';
 import Main from './pages/main';
 import Map from './pages/map';
+import Wallet from './components/wallet';
+import Lands from './components/lands';
+import { MAP, WALLET, LANDS } from './constants/pages';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -14,17 +16,24 @@ const GlobalStyle = createGlobalStyle`
     color: #ffffff;
     margin: 0;
   }
+
+  input {
+    border: 1px solid #ffffff;
+    width: 400px;
+    padding: 12px;
+    color: #ffffff;
+    font-size: 15px;
+  }
 `;
 
 function App() {
   const [web3, setWeb3] = useState(undefined);
   const [accounts, setAccounts] = useState([]);
   const [contract, setContract] = useState([]);
+  const [tokenContract, setTokenContract] = useState([]);
   const [map, setMap] = useState([]);
   const [owner, setOwner] = useState(undefined);
-
-  /*const [token, setToken] = useState([]);
-  const [tokenSale, setTokenSale] = useState([]);*/
+  const [page, setPage] = useState(MAP);
 
   useEffect(() => {
     const init = async () => {
@@ -43,25 +52,16 @@ function App() {
           deployedNetwork && deployedNetwork.address,
         );
 
-        /*const check1 = TokenContract.networks[networkId];
-        const temp1 = new web3.eth.Contract(
+        const tokenDeployedNetwork = TokenContract.networks[networkId];
+        const tokenContract = new web3.eth.Contract(
           TokenContract.abi,
-          check1 && check1.address
-        )
+          tokenDeployedNetwork && tokenDeployedNetwork.address,
+        );
 
-        const check = TokenSaleContract.networks[networkId];
-        const temp = new web3.eth.Contract(
-          TokenSaleContract.abi,
-          check && check.address
-        )*/
-
-        // Set web3, accounts, and contract to the state, and then proceed with an
-        // example of interacting with the contract's methods.
         setWeb3(web3);
         setAccounts(accounts);
         setContract(contract);
-        //setToken(temp1);
-        //setTokenSale(temp);
+        setTokenContract(tokenContract);
       } catch (error) {
         // Catch any errors for any of the above operations.
         console.log('Failed to load web3, accounts, or contract.');
@@ -77,7 +77,6 @@ function App() {
           return;
 
       const response = await contract.methods.getMap().call();
-      console.log(response);
       setMap(response)
     }
 
@@ -88,19 +87,28 @@ function App() {
     }
   }, [web3, accounts, contract])
 
-  /*const hello = async () => {
-    if (typeof tokenSale.methods !== 'undefined') {
-      await tokenSale.methods.buyTokens(5).send({ from: accounts[0] });
-      const res = await token.methods.balanceOf(accounts[0]).call();
-      console.log(res)
+  const renderPages = () => {
+    if (typeof owner === 'undefined') {
+      return <Main setOwner={setOwner} />;
     }
-  }*/
+
+    if (owner) {
+      switch (page) {
+        case MAP: return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
+        case WALLET: return <Wallet contract={tokenContract} address={accounts[0]} />;
+        case LANDS: return <Lands contract={contract} address={accounts[0]} />;
+        default: return <></>;
+      }
+    }
+
+    return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
+  }
 
   return (
     <>
       <GlobalStyle />
-      <Navbar owner={owner} setOwner={setOwner} />
-      {typeof owner === 'undefined' ? <Main setOwner={setOwner} /> : <Map map={map} setMap={setMap} contract={contract} account={accounts[0]} /> }
+      <Navbar owner={owner} setOwner={setOwner} setPage={setPage} />
+      {renderPages()}
     </>
 
   );

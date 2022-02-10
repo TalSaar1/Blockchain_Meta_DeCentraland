@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import { MAP, WALLET, LANDS } from '../constants/pages';
 
 const NavBarContainer = styled.div`
     border-bottom: 2px solid #ffffff;
@@ -39,14 +40,14 @@ const Button = styled.div`
     }
 `;
 
-function Navbar({ owner, setOwner }) {
+function Navbar({ owner, setOwner, setPage }) {
     const renderOwnerButtons = () => {
         if (owner) {
             return (
                 <>
-                    <Button>Map</Button>
-                    <Button>My Wallet</Button>
-                    <Button>My Lands</Button>
+                    <Button onClick={() => setPage(MAP)}>Map</Button>
+                    <Button onClick={() => setPage(WALLET)}>My Wallet</Button>
+                    <Button onClick={() => setPage(LANDS)}>My Lands</Button>
                 </>
             )
         }

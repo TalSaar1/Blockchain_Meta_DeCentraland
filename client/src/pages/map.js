@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import RowLands from '../components/row-lands';
+import Modal from '../components/modal';
+import { LAND_TYPE } from '../constants/types';
 
 const MapContainer = styled.div`
   position: relative;
@@ -44,46 +46,79 @@ const ContentContainer = styled.div`
   text-align: center; 
 `;
 
-function Map({ map, setMap, contract, account }) {
-    const [selectedLand, setSelectedLand] = useState(undefined);
+function Map({ map, setMap, contract, address, owner }) {
+  const [modalOpen, setModelOpen] = useState(false);
+  const [selectedLand, setSelectedLand] = useState(undefined);
+  const [overLand, setOverLand] = useState(undefined);
+  
+  const renderLandDetails = () => {
+    if (typeof overLand !== 'undefined') {
+      return (
+        <>
+          <DetailTitle>Land Details</DetailTitle>
+          <Detail>Type: {LAND_TYPE[overLand.landType]}</Detail>
+          <Detail>Owner: {overLand.owner}</Detail>
+          {owner ? <Detail>Price: {overLand.price}</Detail> : ''}
+          <Detail>Location: ({overLand.row},{overLand.col})</Detail>
+        </>
+      )
+    }
+  }
 
-    const buyLand = async (land) => {
-        const success = await contract.methods.buyLand(land.row, land.col).send({ from: account });
-        if (success) {
-            const response = await contract.methods.getMap().call();
-            setMap(response)
-        }
+  const renderContent = () => {
+    return (
+      <ContentContainer>
+        <h3>Content</h3>
+        {owner ? 
+        <>
+          <div style={{ color: "#008b8b"}}>My Land</div>
+          <div style={{ color: "#b22222"}}>Land With Owner</div>
+          <div style={{ color: "#333333"}}>Land Without Owner</div>
+        </>
+        : 
+        <>
+          <div style={{ color: "#b22222"}}>Game</div>
+          <div style={{ color: "#008b8b"}}>Empty</div>
+        </>}
+        <div style={{ color: "#66ff99"}}>Park</div>
+        <div style={{ color: "#808080"}}>Road</div>
+      </ContentContainer>
+    )
+  }
+
+  const buyLand = async () => {
+    if (typeof selectedLand !== 'undefined') {
+      const success = await contract.methods.buyLand(selectedLand.row, selectedLand.col).send({ from: address });
+      if (success) {
+          const response = await contract.methods.getMap().call();
+          setMap(response)
+      }
     }
+  }
+
+  const updateLand = async () => {
     
-    const showLandDetails = () => {
-        if (typeof selectedLand !== 'undefined') {
-          return (
-            <>
-              <DetailTitle>Land Details</DetailTitle>
-              <Detail>Owner: {selectedLand.owner}</Detail>
-              <Detail>Price: {selectedLand.price}</Detail>
-              <Detail>Location: ({selectedLand.row},{selectedLand.col})</Detail>
-            </>
-          )
-        }
-    }
+  }
+
+  const play = async () => {
+    
+  }
+
+  useEffect(() => {
+    setModelOpen(typeof selectedLand !== 'undefined');
+  }, [selectedLand])
 
   return (
     <>
       <LandDetails>
-        {showLandDetails()}
+        {renderLandDetails()}
       </LandDetails>
       <MapContainer>
-          {map.map((lands, row) => <RowLands key={row} lands={lands} account={account} setSelectedLand={setSelectedLand} buyLand={buyLand} />)}
+          {map.map((lands, row) => <RowLands key={row} lands={lands} address={address} setOverLand={setOverLand} setSelectedLand={setSelectedLand} owner={owner} />)}
       </MapContainer>
-      <ContentContainer>
-        <h3>Content</h3>
-        <div style={{ color: "#008b8b"}}>My Land</div>
-        <div style={{ color: "#b22222"}}>Land With Owner</div>
-        <div style={{ color: "#333333"}}>Land Without Owner</div>
-        <div style={{ color: "#66ff99"}}>Park</div>
-        <div style={{ color: "#808080"}}>Road</div>
-      </ContentContainer>
+      {renderContent()}
+
+      <Modal modalOpen={modalOpen} land={selectedLand} address={address} buyLand={buyLand} updateLand={updateLand} play={play} onClose={() => setModelOpen(false)}>jhbkii</Modal>
     </>
   );
 }
