@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import RowLands from '../components/row-lands';
 import Modal from '../components/modal';
 import { LAND_TYPE } from '../constants/types';
+import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR } from '../constants/colors';
 
 const MapContainer = styled.div`
   position: relative;
@@ -71,17 +72,16 @@ function Map({ map, setMap, contract, address, owner }) {
         <h3>Content</h3>
         {owner ? 
         <>
-          <div style={{ color: "#008b8b"}}>My Land</div>
-          <div style={{ color: "#b22222"}}>Land With Owner</div>
-          <div style={{ color: "#333333"}}>Land Without Owner</div>
+          <div style={{ color: MY_LAND_COLOR}}>My Land</div>
+          <div style={{ color: LAND_COLOR}}>Land</div>
         </>
         : 
         <>
-          <div style={{ color: "#b22222"}}>Game</div>
-          <div style={{ color: "#008b8b"}}>Empty</div>
+          <div style={{ color: GAME_COLOR}}>Game</div>
+          <div style={{ color: LAND_COLOR}}>Empty</div>
         </>}
-        <div style={{ color: "#66ff99"}}>Park</div>
-        <div style={{ color: "#808080"}}>Road</div>
+        <div style={{ color: PARK_COLOR}}>Park</div>
+        <div style={{ color: ROAD_COLOR}}>Road</div>
       </ContentContainer>
     )
   }

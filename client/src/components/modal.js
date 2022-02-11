@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
+import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
 import { LAND_ROAD, LAND_TYPE } from '../constants/types';
+import { TOKEN_SYMBOL } from '../constants/symbols';
 
 const WrapperContainer = styled.div`
     position: fixed;
@@ -30,33 +32,9 @@ const LandType = styled.div`
     margin-bottom: 30px;
 `;
 
-const Category = styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    padding: 6px 10px 10px 10px;
-`;
-
-const Row = styled.div`
-    display: table;
-    clear: both;
-    margin-top: 16px;
-`;
-
-const ColLeft = styled.div`
-    float: left;
-    width: 160px;
-    text-align: center;
-`;
-
-const ColRight = styled.div`
-    float: left;
-    width: 460px;
-    text-align: center;
-`;
-
 const Button = styled.button`
-    float: right;
-    background: #4caf50;
+    float: ${props => props.close ? 'left' : 'right'};
+    background: ${props => props.close ? '#f44336' : '#4caf50'};
     border: 2px solid #ffffff;
     border-radius: 12px;
     color: white;
@@ -72,28 +50,7 @@ const Button = styled.button`
     &:hover {
         background: #ffffff; 
         color: #000000; 
-        border: 2px solid #4caf50;
-    }
-`;
-
-const CloseButton = styled.button`
-    background: #f44336;
-    border: 2px solid #ffffff;
-    border-radius: 12px;
-    color: white;
-    margin-top: 30px;
-    padding: 12px 26px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-
-    &:hover {
-        background: #ffffff; 
-        color: #000000; 
-        border: 2px solid #f44336;
+        border: 2px solid ${props => props.close ? '#f44336' : '#4caf50'};
     }
 `;
 
@@ -109,17 +66,20 @@ function Modal({ modalOpen, land, address, buyLand, updateLand, play, onClose })
                         <ColLeft>
                             <Category>Price</Category>
                         </ColLeft>
-                        <ColRight>
+                        <ColWithRight>
                             <input type='number' value={land.price} disabled />
+                        </ColWithRight>
+                        <ColRight>
+                            <input type='text' value={TOKEN_SYMBOL} disabled />
                         </ColRight>
                     </Row>
                     <Row>
                         <ColLeft>
                             <Category>Content</Category>
                         </ColLeft>
-                        <ColRight>
+                        <Col>
                             <input type='text' value={land.content} disabled />
-                        </ColRight>
+                        </Col>
                     </Row>
                 </>
             )
@@ -147,12 +107,12 @@ function Modal({ modalOpen, land, address, buyLand, updateLand, play, onClose })
                     <ColLeft>
                         <Category>Owner</Category>
                     </ColLeft>
-                    <ColRight>
+                    <Col>
                         <input type="text" value={land.owner} disabled />
-                    </ColRight>
+                    </Col>
                 </Row>
                 {renderNoRoad()}
-                <CloseButton onClick={onClose}>Close</CloseButton>
+                <Button close onClick={onClose}>Close</Button>
                 {functionButton()}
             </Container>
         </WrapperContainer>,

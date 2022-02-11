@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
 
   input {
     border: 1px solid #ffffff;
-    width: 400px;
+    width: 100%;
     padding: 12px;
     color: #ffffff;
     font-size: 15px;
@@ -57,7 +57,6 @@ function App() {
           TokenContract.abi,
           tokenDeployedNetwork && tokenDeployedNetwork.address,
         );
-
         setWeb3(web3);
         setAccounts(accounts);
         setContract(contract);
@@ -77,6 +76,7 @@ function App() {
           return;
 
       const response = await contract.methods.getMap().call();
+      console.log(response)
       setMap(response)
     }
 
@@ -95,7 +95,7 @@ function App() {
     if (owner) {
       switch (page) {
         case MAP: return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
-        case WALLET: return <Wallet contract={tokenContract} address={accounts[0]} />;
+        case WALLET: return <Wallet web3={web3} contract={tokenContract} address={accounts[0]} />;
         case LANDS: return <Lands contract={contract} address={accounts[0]} />;
         default: return <></>;
       }
