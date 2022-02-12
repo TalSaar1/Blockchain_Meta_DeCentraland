@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
-import { LAND_ROAD, LAND_TYPE } from '../constants/types';
+import { LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
 import { TOKEN_SYMBOL } from '../constants/symbols';
 
 const WrapperContainer = styled.div`
@@ -20,7 +20,7 @@ const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #00008b;
+  background: ${props => props.backgroundColor};
   padding: 40px;
   z-index: 1000;
 `;
@@ -54,7 +54,7 @@ const Button = styled.button`
     }
 `;
 
-function Modal({ modalOpen, land, address, buyLand, updateLand, play, onClose }) {
+function Modal({ modalOpen, land, backgroundColor, address, buyLand, updateLand, play, onClose }) {
     if (!modalOpen)
         return null;
 
@@ -96,12 +96,14 @@ function Modal({ modalOpen, land, address, buyLand, updateLand, play, onClose })
         if (address === land.owner) {
             return (<Button onClick={updateLand}>Update</Button>)
         }
-        return (<Button onClick={buyLand}>Buy</Button>)
+        if (land.landType !== LAND_PARK) {
+            return (<Button onClick={buyLand}>Buy</Button>)
+        }
     }
 
     return ReactDOM.createPortal(
         <WrapperContainer>
-            <Container>
+            <Container backgroundColor={backgroundColor(land)}>
                 <LandType>{LAND_TYPE[land.landType]} ({land.row},{land.col})</LandType>
                 <Row>
                     <ColLeft>

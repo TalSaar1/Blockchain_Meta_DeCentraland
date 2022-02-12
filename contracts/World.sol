@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 //import "./Land.sol";
 
 contract World {
-    uint256 constant MAP_SIZE = 9;
+    uint256 constant MAP_SIZE = 50;
 
     enum LandType { NFT, PARK, ROAD }
 
@@ -24,10 +24,10 @@ contract World {
 
     constructor() public {
         owner = msg.sender;
-        initMap();
+        //initMap();
     }
 
-    function initMap() private {
+    function initMap() public {
         //initialPrice = uint(keccak256(abi.encodePacked(msg.sender, now))) % (MAX_INITIAL_PRICE - MIN_INITIAL_PRICE) + MIN_INITIAL_PRICE;
 
         for (uint8 i = 0; i < MAP_SIZE; i++) {

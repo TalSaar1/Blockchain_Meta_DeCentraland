@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import RowLands from '../components/row-lands';
 import Modal from '../components/modal';
-import { LAND_TYPE } from '../constants/types';
-import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR } from '../constants/colors';
+import { LAND_NFT, LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
+import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
 const MapContainer = styled.div`
   position: relative;
@@ -90,8 +90,8 @@ function Map({ map, setMap, contract, address, owner }) {
     if (typeof selectedLand !== 'undefined') {
       const success = await contract.methods.buyLand(selectedLand.row, selectedLand.col).send({ from: address });
       if (success) {
-          const response = await contract.methods.getMap().call();
-          setMap(response)
+        const response = await contract.methods.getMap().call();
+        setMap(response);
       }
     }
   }
@@ -108,17 +108,30 @@ function Map({ map, setMap, contract, address, owner }) {
     setModelOpen(typeof selectedLand !== 'undefined');
   }, [selectedLand])
 
+  const backgroundColor = (land) => {
+    switch (land.landType) {
+      case LAND_NFT:
+          return owner && land.owner === address ? MY_LAND_COLOR : land.content !== '' ? GAME_COLOR : LAND_COLOR;
+      case LAND_PARK:
+          return PARK_COLOR;
+      case LAND_ROAD:
+          return ROAD_COLOR;
+      default:
+          return BLACK_COLOR;
+    }
+  }
+
   return (
     <>
       <LandDetails>
         {renderLandDetails()}
       </LandDetails>
       <MapContainer>
-          {map.map((lands, row) => <RowLands key={row} lands={lands} address={address} setOverLand={setOverLand} setSelectedLand={setSelectedLand} owner={owner} />)}
+        {map.map((lands, row) => <RowLands key={row} lands={lands} backgroundColor={backgroundColor} setOverLand={setOverLand} setSelectedLand={setSelectedLand} />)}
       </MapContainer>
       {renderContent()}
 
-      <Modal modalOpen={modalOpen} land={selectedLand} address={address} buyLand={buyLand} updateLand={updateLand} play={play} onClose={() => setModelOpen(false)}>jhbkii</Modal>
+      <Modal modalOpen={modalOpen} land={selectedLand} backgroundColor={backgroundColor} address={address} buyLand={buyLand} updateLand={updateLand} play={play} onClose={() => setModelOpen(false)}>jhbkii</Modal>
     </>
   );
 }

@@ -3,9 +3,9 @@ pragma solidity ^0.5.0;
 contract Token {
     string public name;
     string public symbol;
-    uint256 public decimal;
+    uint256 public decimals;
     uint256 public totalSupply;
-    uint256 public unitsOneEthCanBuy ;
+    uint256 public unitsOneEthCanBuy;
     address payable public fundsWallet;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -14,11 +14,11 @@ contract Token {
     mapping(address => uint256) public balances;
     mapping(address => mapping (address => uint256)) public allowance;
 
-    constructor(string memory _name, string memory _symbol, uint256 _decimal, uint256 _unitsOneEthCanBuy, uint256 _totalSupply) public {
+    constructor(string memory _name, string memory _symbol, uint256 _decimals, uint256 _unitsOneEthCanBuy, uint256 _totalSupply) public {
         name = _name;
         symbol = _symbol;
-        decimal = _decimal;
-        totalSupply = _totalSupply * (10 ** decimal);
+        decimals = _decimals;
+        totalSupply = _totalSupply * (10 ** decimals);
         unitsOneEthCanBuy = _unitsOneEthCanBuy;
         fundsWallet = msg.sender;
         balances[fundsWallet] = totalSupply;
@@ -31,6 +31,7 @@ contract Token {
     }
 
     function buyTokens() public payable {
+        require(msg.sender != fundsWallet);
         uint256 amount = msg.value * unitsOneEthCanBuy;
         require(balances[fundsWallet] >= amount);
 

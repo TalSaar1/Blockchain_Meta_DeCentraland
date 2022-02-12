@@ -6,10 +6,10 @@ const Container = styled.div`
   float: left
 `
 
-function RowLands({ lands, account, setOverLand, setSelectedLand, owner }) {
+function RowLands({ lands, backgroundColor, setOverLand, setSelectedLand }) {
     return (
         <Container>
-            {lands.map((land, col) => <Land key={col} land={land} account={account} setOverLand={setOverLand} setSelectedLand={setSelectedLand} owner={owner} />)}
+            {lands.map((land, col) => <Land key={col} land={land} backgroundColor={backgroundColor} setOverLand={setOverLand} setSelectedLand={setSelectedLand} />)}
         </Container>
     )
 }

@@ -75,6 +75,7 @@ function App() {
       if (typeof contract.methods === 'undefined')
           return;
 
+      //await contract.methods.initMap().send({ from: accounts[0] });
       const response = await contract.methods.getMap().call();
       console.log(response)
       setMap(response)
@@ -110,7 +111,6 @@ function App() {
       <Navbar owner={owner} setOwner={setOwner} setPage={setPage} />
       {renderPages()}
     </>
-
   );
 }
 
