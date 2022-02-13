@@ -7,8 +7,7 @@ import Navbar from './components/navbar';
 import Main from './pages/main';
 import Map from './pages/map';
 import Wallet from './components/wallet';
-import Lands from './components/lands';
-import { MAP, WALLET, LANDS } from './constants/pages';
+import { MAP, WALLET } from './constants/pages';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -73,12 +72,10 @@ function App() {
   useEffect(() => {
     const load = async () => {
       if (typeof contract.methods === 'undefined')
-          return;
+        return;
 
-      //await contract.methods.initMap().send({ from: accounts[0] });
-      const response = await contract.methods.getMap().call();
-      console.log(response)
-      setMap(response)
+        const response = await contract.methods.getMap().call();
+        setMap(response);
     }
 
     if (typeof web3 !== 'undefined' 
@@ -97,7 +94,6 @@ function App() {
       switch (page) {
         case MAP: return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
         case WALLET: return <Wallet web3={web3} contract={tokenContract} address={accounts[0]} />;
-        case LANDS: return <Lands contract={contract} address={accounts[0]} />;
         default: return <></>;
       }
     }

@@ -92,32 +92,41 @@ function Map({ map, setMap, contract, address, owner }) {
       if (success) {
         const response = await contract.methods.getMap().call();
         setMap(response);
+        setModelOpen(false);
       }
     }
   }
 
-  const updateLand = async () => {
-    
+  const updateLand = async (newLand) => {
+    if (typeof selectedLand !== 'undefined') {
+      const success = await contract.methods.setLand(newLand).send({ from: address });
+      if (success) {
+        const response = await contract.methods.getMap().call();
+        setMap(response);
+        setModelOpen(false);
+      }
+    }
   }
 
   const play = async () => {
-    
+    setModelOpen(false);
+    alert('That is a good game');
   }
 
   useEffect(() => {
     setModelOpen(typeof selectedLand !== 'undefined');
-  }, [selectedLand])
+  }, [selectedLand]);
 
   const backgroundColor = (land) => {
     switch (land.landType) {
       case LAND_NFT:
-          return owner && land.owner === address ? MY_LAND_COLOR : land.content !== '' ? GAME_COLOR : LAND_COLOR;
+        return owner && land.owner === address ? MY_LAND_COLOR : !owner && land.content !== '' ? GAME_COLOR : LAND_COLOR;
       case LAND_PARK:
-          return PARK_COLOR;
+        return PARK_COLOR;
       case LAND_ROAD:
-          return ROAD_COLOR;
+        return ROAD_COLOR;
       default:
-          return BLACK_COLOR;
+        return BLACK_COLOR;
     }
   }
 
@@ -131,7 +140,17 @@ function Map({ map, setMap, contract, address, owner }) {
       </MapContainer>
       {renderContent()}
 
-      <Modal modalOpen={modalOpen} land={selectedLand} backgroundColor={backgroundColor} address={address} buyLand={buyLand} updateLand={updateLand} play={play} onClose={() => setModelOpen(false)}>jhbkii</Modal>
+      <Modal
+        modalOpen={modalOpen}
+        land={selectedLand}
+        backgroundColor={backgroundColor}
+        owner={owner}
+        address={address}
+        buyLand={buyLand}
+        updateLand={updateLand}
+        play={play}
+        onClose={() => setModelOpen(false)}
+      ></Modal>
     </>
   );
 }

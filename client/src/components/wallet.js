@@ -45,14 +45,16 @@ function Wallet({ web3, contract, address }) {
     const [balance, setBalance] = useState(0);
     const [tokens, setTokens] = useState(0);
 
-    useEffect(() => {
-        updateBalance();
-    }, [contract, address]);
-
+   
     const updateBalance = async () => {
         const response = await contract.methods.balanceOf(address).call();
         setBalance(web3.utils.fromWei(response, 'ether'));
     }
+    
+    useEffect(() => {
+        updateBalance();
+    }, []);
+
 
     const buyTokens = async (e) => {
         e.preventDefault();

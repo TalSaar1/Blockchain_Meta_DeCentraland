@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
@@ -54,7 +54,13 @@ const Button = styled.button`
     }
 `;
 
-function Modal({ modalOpen, land, backgroundColor, address, buyLand, updateLand, play, onClose }) {
+function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, updateLand, play, onClose }) {
+    const [newLand, setNewLand] = useState(undefined);
+
+    useEffect(() => {
+        setNewLand(land);
+    }, [land]);
+
     if (!modalOpen)
         return null;
 
@@ -62,23 +68,39 @@ function Modal({ modalOpen, land, backgroundColor, address, buyLand, updateLand,
         if (land.landType !== LAND_ROAD) {
             return (
                 <>
-                    <Row>
-                        <ColLeft>
-                            <Category>Price</Category>
-                        </ColLeft>
-                        <ColWithRight>
-                            <input type='number' value={land.price} disabled />
-                        </ColWithRight>
-                        <ColRight>
-                            <input type='text' value={TOKEN_SYMBOL} disabled />
-                        </ColRight>
-                    </Row>
+                    {owner && land.landType !== LAND_PARK ? 
+                        <Row>
+                            <ColLeft>
+                                <Category>Price</Category>
+                            </ColLeft>
+                            <ColWithRight>
+                                <input 
+                                    type='number'
+                                    defaultValue={land.price}
+                                    onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
+                                    disabled={!owner || address !== land.owner}
+                                    style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
+                                />
+                            </ColWithRight>
+                            <ColRight>
+                                <input type='text' value={TOKEN_SYMBOL} disabled />
+                            </ColRight>
+                        </Row>
+                        :
+                        ''
+                    }
                     <Row>
                         <ColLeft>
                             <Category>Content</Category>
                         </ColLeft>
                         <Col>
-                            <input type='text' value={land.content} disabled />
+                            <input
+                                type='text'
+                                defaultValue={land.content}
+                                onChange={e => setNewLand({ ...newLand, content: e.target.value })}
+                                disabled={!owner || address !== land.owner}
+                                style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
+                            />
                         </Col>
                     </Row>
                 </>
@@ -88,13 +110,16 @@ function Modal({ modalOpen, land, backgroundColor, address, buyLand, updateLand,
 
     const functionButton = () => {
         if (land.landType === LAND_ROAD) {
-            return (<></>);
+            return <></>;
         }
-        if (typeof address === 'undefined') {
-            return (<Button onClick={play}>Play</Button>)
+        if (!owner) {
+            if (land.content !== '') {
+                return (<Button onClick={play}>Play</Button>)
+            }
+            return <></>;
         }
         if (address === land.owner) {
-            return (<Button onClick={updateLand}>Update</Button>)
+            return (<Button onClick={() => updateLand(newLand)}>Update</Button>)
         }
         if (land.landType !== LAND_PARK) {
             return (<Button onClick={buyLand}>Buy</Button>)
