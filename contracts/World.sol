@@ -1,10 +1,9 @@
-pragma solidity ^0.5.0;
-pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 //import "./Land.sol";
 
 contract World {
-    uint256 constant MAP_SIZE = 9;
     uint256 constant MIN_INITIAL_PRICE = 5;
     uint256 constant MAX_INITIAL_PRICE = 20;
 
@@ -20,20 +19,18 @@ contract World {
     }
     
     address owner;
-    Land[MAP_SIZE][MAP_SIZE] public map;
+    mapping(uint8 => mapping(uint8 => Land)) public map;
 
-    //mapping(address => Land[]) public lands;
-
-    constructor() public {
+    constructor() {
         owner = msg.sender;
         initMap();
     }
 
     function initMap() private {
-        uint256 initialPrice = uint256(keccak256(abi.encodePacked(msg.sender, now))) % (MAX_INITIAL_PRICE - MIN_INITIAL_PRICE) + MIN_INITIAL_PRICE;
+        uint256 initialPrice = uint256(keccak256(abi.encodePacked(msg.sender))) % (MAX_INITIAL_PRICE - MIN_INITIAL_PRICE) + MIN_INITIAL_PRICE;
 
-        for (uint8 i = 0; i < MAP_SIZE; i++) {
-            for (uint8 j = 0; j < MAP_SIZE; j++) {
+        for (uint8 i = 0; i < 20; i++) {
+            for (uint8 j = 0; j < 20; j++) {
                 map[i][j].owner = owner;
                 map[i][j].row = i;
                 map[i][j].col = j;
@@ -50,16 +47,16 @@ contract World {
         }
     }
 
-    function setLand(Land memory land) public {
+    /*function setLand(Land memory land) public {
         uint8 row = land.row;
         uint8 col = land.col;
         require(row >= 0 && row < MAP_SIZE && col >= 0 && col < MAP_SIZE);
 
         map[row][col] = land;
-    }
+    }*/
 
-    function buyLand(uint row, uint col) public returns (bool success) {
-        require(row >= 0 && row < MAP_SIZE && col >= 0 && col < MAP_SIZE);
+    function buyLand(uint8 row, uint8 col) public returns (bool success) {
+        //require(row >= 0 && row < MAP_SIZE && col >= 0 && col < MAP_SIZE);
 
         //map[row][col].transferFrom(map[row][col].getOwner(), msg.sender, 0);
         map[row][col].owner = msg.sender;
@@ -68,7 +65,7 @@ contract World {
         return true;
     }
 
-    function getMap() public view returns (Land[MAP_SIZE][MAP_SIZE] memory) {
+    /*function getMap() public view returns (Land[][] memory) {
         return map;
-    }
+    }*/
 }

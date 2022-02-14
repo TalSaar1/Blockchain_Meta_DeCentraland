@@ -74,8 +74,11 @@ function App() {
       if (typeof contract.methods === 'undefined')
         return;
 
-        const response = await contract.methods.getMap().call();
-        setMap(response);
+        console.log(await contract.methods.map(1, 1).call());
+        //const response = await contract.methods.getMap().call();
+        //console.log(response)
+        //const response = await contract.methods.getMap().call();
+        //setMap(response);
     }
 
     if (typeof web3 !== 'undefined' 

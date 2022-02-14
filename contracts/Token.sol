@@ -1,81 +1,25 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-contract Token {
-    string public name;
-    string public symbol;
-    uint256 public decimals;
-    uint256 public totalSupply;
-    uint256 public unitsOneEthCanBuy;
-    address payable public fundsWallet;
+import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+contract Token is ERC20 {
+    address payable fundsWallet;
+    uint256 unitsOneEthCanBuy;
 
-    mapping(address => uint256) public balances;
-    mapping(address => mapping (address => uint256)) public allowance;
-
-    constructor(string memory _name, string memory _symbol, uint256 _decimals, uint256 _unitsOneEthCanBuy, uint256 _totalSupply) public {
-        name = _name;
-        symbol = _symbol;
-        decimals = _decimals;
-        totalSupply = _totalSupply * (10 ** decimals);
-        unitsOneEthCanBuy = _unitsOneEthCanBuy;
-        fundsWallet = msg.sender;
-        balances[fundsWallet] = totalSupply;
-
-        emit Transfer(address(0), fundsWallet, totalSupply);
-    }
-
-    function balanceOf(address _owner) public view returns (uint256 balance) {
-        return balances[_owner];
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+        fundsWallet = payable(_msgSender());
+        unitsOneEthCanBuy = 10;
+        _mint(_msgSender(), 10000 * 10**uint(decimals()));
     }
 
     function buyTokens() public payable {
-        require(msg.sender != fundsWallet);
+        require(_msgSender() != fundsWallet);
         uint256 amount = msg.value * unitsOneEthCanBuy;
-        require(balances[fundsWallet] >= amount);
+        require(balanceOf(fundsWallet) >= amount);
 
-        balances[fundsWallet] = balances[fundsWallet] - amount;
-        balances[msg.sender] = balances[msg.sender] + amount;
+        _transfer(fundsWallet, _msgSender(), amount);
 
-        emit Transfer(fundsWallet, msg.sender, amount);
-
-        fundsWallet.transfer(msg.value);                               
-    }
-
-    function transfer(address _to, uint256 _value) public returns (bool success) {
-        require(balances[msg.sender] >= _value, "Not enough tokens to transfer");
-        
-        _transfer(msg.sender, _to, _value);
-
-        return true;
-    }
-
-    function _transfer(address _from, address _to, uint256 _value) internal {
-        require(_to != address(0));
-
-        balances[_from] -= _value;
-        balances[_to] += _value;
-
-        emit Transfer(_from, _to, _value);
-    }
-
-    function approve(address _spender, uint256 _value) public returns (bool success) {
-        require(_spender != address(0));
-
-        allowance[msg.sender][_spender] = _value;
-        
-        emit Approval(msg.sender, _spender, _value);
-        return true;
-    }
-
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require(allowance[_from][msg.sender] >= _value, "Not approved to spend");
-        require(balances[_from] >= _value, "Not enough tokens to transfer");
-        
-        allowance[_from][msg.sender] -= _value;
-        _transfer(_from, _to, _value);
-
-        return true;
+        fundsWallet.transfer(msg.value);
     }
 }
