@@ -74,11 +74,27 @@ function App() {
       if (typeof contract.methods === 'undefined')
         return;
 
-        console.log(await contract.methods.map(1, 1).call());
         //const response = await contract.methods.getMap().call();
-        //console.log(response)
-        //const response = await contract.methods.getMap().call();
-        //setMap(response);
+        //const size = Math.sqrt(response.length);
+        const owner = await contract.methods.owner().call();
+        const map = [];
+        for (let i = 0; i < 100; i++) {
+          const row = [];
+          for (let j = 0; j < 100; j++) {
+            row.push({
+              tokenId: i * 100 + j,
+              owner,
+              landType: i % 17 === 15 || i % 17 === 16 || j % 17 === 15 || j % 17 === 16 ? '2' : i >= 17 && i <= 48 && j >= 17 && j <= 48 || i >= 51 && i <= 82 && j >= 51 && j <= 82 ? '1' : '0',
+              price: 12,
+              content: '',
+              row: i,
+              col: j
+            });
+          }
+          map.push(row);
+        }
+        console.log(map)
+        setMap(map);
     }
 
     if (typeof web3 !== 'undefined' 

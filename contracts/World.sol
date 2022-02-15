@@ -1,71 +1,54 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-//import "./Land.sol";
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
 
-contract World {
-    uint256 constant MIN_INITIAL_PRICE = 5;
-    uint256 constant MAX_INITIAL_PRICE = 20;
+//enum LandType { NFT, PARK, ROAD }
+//uint256 constant MAP_SIZE = 100;
 
-    enum LandType { NFT, PARK, ROAD }
+contract World is ERC721, Ownable {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-    struct Land {
+    /*struct Land {
+        uint256 tokenId;
         address owner;
         LandType landType;
         uint256 price;
         string content;
-        uint8 row;
-        uint8 col;
-    }
+    }*/
     
-    address owner;
-    mapping(uint8 => mapping(uint8 => Land)) public map;
+    //address[MAP_SIZE][MAP_SIZE] map;
 
-    constructor() {
-        owner = msg.sender;
-        initMap();
-    }
+    constructor() ERC721('Land', 'LAND') Ownable() {}
 
-    function initMap() private {
-        uint256 initialPrice = uint256(keccak256(abi.encodePacked(msg.sender))) % (MAX_INITIAL_PRICE - MIN_INITIAL_PRICE) + MIN_INITIAL_PRICE;
-
-        for (uint8 i = 0; i < 20; i++) {
-            for (uint8 j = 0; j < 20; j++) {
-                map[i][j].owner = owner;
-                map[i][j].row = i;
-                map[i][j].col = j;
+    /*function mintAllLands() public {
+        for (uint8 i = 0; i < MAP_SIZE; i++) {
+            for (uint8 j = 0; j < MAP_SIZE; j++) {
                 if (i == 5 || j == 5) {
-                    map[i][j].landType = LandType.ROAD;
+                    mint(i, j, LandType.ROAD, 0, 'empty');
                 } else if (i >= 2 && i <= 4 && j >= 2 && j <= 4
-                    || i >= 6 && i <= 8 && j >= 6 && j <= 8) {
-                    map[i][j].landType = LandType.PARK;
+                    || i >= 6 && i <= 7 && j >= 6 && j <= 7) {
+                    mint(i, j, LandType.PARK, 0, 'empty');
                 } else {
-                    map[i][j].landType = LandType.NFT;
-                    map[i][j].price = initialPrice;
+                    mint(i, j, LandType.NFT, 12, 'empty');
                 }
             }
         }
-    }
-
-    /*function setLand(Land memory land) public {
-        uint8 row = land.row;
-        uint8 col = land.col;
-        require(row >= 0 && row < MAP_SIZE && col >= 0 && col < MAP_SIZE);
-
-        map[row][col] = land;
     }*/
 
-    function buyLand(uint8 row, uint8 col) public returns (bool success) {
-        //require(row >= 0 && row < MAP_SIZE && col >= 0 && col < MAP_SIZE);
-
-        //map[row][col].transferFrom(map[row][col].getOwner(), msg.sender, 0);
-        map[row][col].owner = msg.sender;
-        //lands[msg.sender].push(map[row][col]);
-
-        return true;
+    function mint() public onlyOwner returns (uint256) {
+        _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+        _mint(msg.sender, newItemId);
+        //map[row][col] = msg.sender;
+    
+        return newItemId;
     }
 
-    /*function getMap() public view returns (Land[][] memory) {
+    /*function getMap() public view returns (address[MAP_SIZE][MAP_SIZE] memory) {
         return map;
     }*/
 }

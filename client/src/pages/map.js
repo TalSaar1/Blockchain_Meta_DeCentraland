@@ -12,76 +12,50 @@ const MapContainer = styled.div`
   flex-direction: row;
 `;
 
-const LandDetails = styled.div`
+const ContentContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
-  background: #303030;
-  border-bottom: 2px solid #ffffff;
+  background: #ffffff;
+  border-bottom: 2px solid #000000;
   height: 30px;
 `;
 
-const DetailTitle = styled.div`
+const ContentTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   margin: auto 0;
   margin-left: 10px;
+  color: #000000;
 `;
 
-const Detail = styled.div`
-  font-size: 16px;
+const LandType = styled.div`
+  font-size: 18px;
   margin: auto 0;
   margin-left: 35px;
 `;
 
-const ContentContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 20px;
-  padding: 0 14px 14px 14px;
-  background: #ffffff;
-  color: #000000;
-  border: 2px solid #000000;
-  border-radius: 16px;
-  text-align: center; 
-`;
 
 function Map({ map, setMap, contract, address, owner }) {
   const [modalOpen, setModelOpen] = useState(false);
   const [selectedLand, setSelectedLand] = useState(undefined);
-  const [overLand, setOverLand] = useState(undefined);
   
-  const renderLandDetails = () => {
-    if (typeof overLand !== 'undefined') {
-      return (
-        <>
-          <DetailTitle>Land Details</DetailTitle>
-          <Detail>Type: {LAND_TYPE[overLand.landType]}</Detail>
-          <Detail>Owner: {overLand.owner}</Detail>
-          {owner ? <Detail>Price: {overLand.price}</Detail> : ''}
-          <Detail>Location: ({overLand.row},{overLand.col})</Detail>
-        </>
-      )
-    }
-  }
-
   const renderContent = () => {
     return (
       <ContentContainer>
-        <h3>Content</h3>
+        <ContentTitle>Content</ContentTitle>
         {owner ? 
         <>
-          <div style={{ color: MY_LAND_COLOR}}>My Land</div>
-          <div style={{ color: LAND_COLOR}}>Land</div>
+          <LandType style={{ color: MY_LAND_COLOR}}>My Land</LandType>
+          <LandType style={{ color: LAND_COLOR}}>Land</LandType>
         </>
         : 
         <>
-          <div style={{ color: GAME_COLOR}}>Game</div>
-          <div style={{ color: LAND_COLOR}}>Empty</div>
+          <LandType style={{ color: GAME_COLOR}}>Game</LandType>
+          <LandType style={{ color: LAND_COLOR}}>Empty</LandType>
         </>}
-        <div style={{ color: PARK_COLOR}}>Park</div>
-        <div style={{ color: ROAD_COLOR}}>Road</div>
+        <LandType style={{ color: PARK_COLOR}}>Park</LandType>
+        <LandType style={{ color: ROAD_COLOR}}>Road</LandType>
       </ContentContainer>
     )
   }
@@ -132,13 +106,10 @@ function Map({ map, setMap, contract, address, owner }) {
 
   return (
     <>
-      <LandDetails>
-        {renderLandDetails()}
-      </LandDetails>
+        {renderContent()}
       <MapContainer>
-        {map.map((lands, row) => <RowLands key={row} lands={lands} backgroundColor={backgroundColor} setOverLand={setOverLand} setSelectedLand={setSelectedLand} />)}
+        {map.map((lands, row) => <RowLands key={row} lands={lands} backgroundColor={backgroundColor} setSelectedLand={setSelectedLand} />)}
       </MapContainer>
-      {renderContent()}
 
       <Modal
         modalOpen={modalOpen}
