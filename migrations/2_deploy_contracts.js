@@ -1,7 +1,41 @@
+const fs = require('fs');
 const Token = artifacts.require('./Token.sol');
 const World = artifacts.require('./World.sol');
 
-module.exports = (deployer) => {
-  deployer.deploy(Token, 'Elad Tal Coin', 'ETC');
-  deployer.deploy(World);
+module.exports = async (deployer) => {
+  deployer.deploy(Token, 'Elad Tal Coin', 'ETC');/*.then(tokenInstance => {
+    deployer.deploy(World, tokenInstance.address).then(worldInstance => {
+      fs.readFile('./map.json', 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+  
+        const world = JSON.parse(data);
+        world.map(rowLands => {
+          rowLands.map(land => {
+            worldInstance.mint(JSON.stringify(land))
+          });
+        });
+      });
+    });
+  });*/
+
+  const tokenInstance = await Token.deployed();
+
+  deployer.deploy(World, tokenInstance.address).then(worldInstance => {
+    fs.readFile('./map.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      const world = JSON.parse(data);
+      world.map(rowLands => {
+        rowLands.map(land => {
+          worldInstance.mint(land.tokenId, JSON.stringify(land))
+        });
+      });
+    });
+  });
 };

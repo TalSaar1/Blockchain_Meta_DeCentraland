@@ -28,17 +28,18 @@ const ToolTipText = styled("span")({
 
 const ToolTipContainer = styled("div")({
   position: "relative",
-  display: "inline-block",
   ":hover span": {
     visibility: "visible"
   }
 });
 
-const ToolTip = ({ children, toolTipText }) => (
-  <ToolTipContainer>
-    {children}
-    <ToolTipText>{toolTipText}</ToolTipText>
-  </ToolTipContainer>
-);
+function ToolTip({ children, toolTipText }) {
+  return (
+    <ToolTipContainer>
+      {children}
+      <ToolTipText>{toolTipText}</ToolTipText>
+    </ToolTipContainer>
+  )
+}
 
 export default ToolTip;

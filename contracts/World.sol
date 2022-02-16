@@ -1,54 +1,56 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
+import './Token.sol';
 
-//enum LandType { NFT, PARK, ROAD }
-//uint256 constant MAP_SIZE = 100;
+contract World is ERC721URIStorage, Ownable {
+    Token token;
+    uint256 private numOfTokens;
 
-contract World is ERC721, Ownable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-
-    /*struct Land {
-        uint256 tokenId;
-        address owner;
-        LandType landType;
-        uint256 price;
-        string content;
-    }*/
-    
-    //address[MAP_SIZE][MAP_SIZE] map;
-
-    constructor() ERC721('Land', 'LAND') Ownable() {}
-
-    /*function mintAllLands() public {
-        for (uint8 i = 0; i < MAP_SIZE; i++) {
-            for (uint8 j = 0; j < MAP_SIZE; j++) {
-                if (i == 5 || j == 5) {
-                    mint(i, j, LandType.ROAD, 0, 'empty');
-                } else if (i >= 2 && i <= 4 && j >= 2 && j <= 4
-                    || i >= 6 && i <= 7 && j >= 6 && j <= 7) {
-                    mint(i, j, LandType.PARK, 0, 'empty');
-                } else {
-                    mint(i, j, LandType.NFT, 12, 'empty');
-                }
-            }
-        }
-    }*/
-
-    function mint() public onlyOwner returns (uint256) {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        _mint(msg.sender, newItemId);
-        //map[row][col] = msg.sender;
-    
-        return newItemId;
+    constructor(Token _token) ERC721('Land', 'LAND') Ownable() {
+        token = _token;
+        numOfTokens = 0;
     }
 
-    /*function getMap() public view returns (address[MAP_SIZE][MAP_SIZE] memory) {
-        return map;
+    function mint(uint256 tokenId, string memory tokenURI) public onlyOwner {
+        numOfTokens = tokenId;
+        _mint(msg.sender, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+    }
+
+    function getTokensCount() public view returns (uint256) {
+        return numOfTokens;
+    }
+
+    function getMap() public view returns (address[] memory, string[] memory) {
+        address[] memory owners = new address[](numOfTokens);
+        string[] memory map = new string[](numOfTokens);
+
+        for (uint256 i = 0; i < numOfTokens; i++) {
+            owners[i] = ownerOf(i + 1);
+            map[i] = tokenURI(i + 1);
+        }
+
+        return (owners, map);
+    }
+
+    /*function buyLand(uint256 tokenId, uint256 price) public payable returns (bool) {
+        address ownerOfToken = ownerOf(tokenId);
+        token.approve(ownerOfToken, price);
+        bool success = token.transfer(ownerOfToken, price);
+
+        //if (success) {
+            //transferFrom(ownerOfToken, msg.sender, tokenId);
+        //}
+
+        return success;
     }*/
+
+    function updateLand(uint256 tokenId, string memory tokenURI) public {
+        require(msg.sender == ownerOf(tokenId));
+        _setTokenURI(tokenId, tokenURI);
+    }
 }

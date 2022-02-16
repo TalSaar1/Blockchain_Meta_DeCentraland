@@ -73,28 +73,66 @@ function App() {
     const load = async () => {
       if (typeof contract.methods === 'undefined')
         return;
+        const size = Math.sqrt(await contract.methods.getTokensCount().call());
+        const response = await contract.methods.getMap().call();
+        const owners = response[0];
+        const tokens = JSON.parse(JSON.stringify(response[1]));
+        const world = [];
+        for (let i = 0; i < size; i++) {
+          const row = [];
+          for (let j = 0; j < size; j++) {
+            const land = JSON.parse(tokens[i * size + j]);
+            row.push({ ...land, owner: owners[i * size + j]});
+          }
+          world.push(row)
+        }
+        setMap(world);
 
-        //const response = await contract.methods.getMap().call();
-        //const size = Math.sqrt(response.length);
-        const owner = await contract.methods.owner().call();
-        const map = [];
+        /*const map = [];
         for (let i = 0; i < 100; i++) {
           const row = [];
           for (let j = 0; j < 100; j++) {
-            row.push({
-              tokenId: i * 100 + j,
-              owner,
-              landType: i % 17 === 15 || i % 17 === 16 || j % 17 === 15 || j % 17 === 16 ? '2' : i >= 17 && i <= 48 && j >= 17 && j <= 48 || i >= 51 && i <= 82 && j >= 51 && j <= 82 ? '1' : '0',
-              price: 12,
-              content: '',
-              row: i,
-              col: j
-            });
+            if (i % 17 === 15 || i % 17 === 16 || j % 17 === 15 || j % 17 === 16) {
+              row.push({landType: '2'});
+            } else if (i >= 17 && i <= 48 && j >= 17 && j <= 48 || i >= 51 && i <= 82 && j >= 51 && j <= 82) {
+              row.push({
+                landType: '1',
+              });
+            } else {
+              row.push({
+                landType: '0',
+                price: Math.floor(Math.random() * 16) + 5,
+              });
+            }
           }
           map.push(row);
         }
-        console.log(map)
-        setMap(map);
+        console.log(JSON.stringify(map, null, 4))
+        setMap(map);*/
+
+        /*const map = [];
+        for (let i = 0; i < 10; i++) {
+          const row = [];
+          for (let j = 0; j < 10; j++) {
+            if (i % 4 === 2 || i % 4 === 3 || j % 4 === 2 || j % 4 === 3) {
+              row.push({tokenId: i * 10 + j + 1, landType: '2'});
+            } else if (i >= 0 && i <= 1 && j >= 0 && j <= 1 || i >= 4 && i <= 5 && j >= 4 && j <= 5) {
+              row.push({
+                tokenId: i * 10 + j + 1,
+                landType: '1',
+              });
+            } else {
+              row.push({
+                tokenId: i * 10 + j + 1,
+                landType: '0',
+                price: Math.floor(Math.random() * 16) + 5,
+              });
+            }
+          }
+          map.push(row);
+        }
+        console.log(JSON.stringify(map, null, 4))
+        setMap(map);*/
     }
 
     if (typeof web3 !== 'undefined' 

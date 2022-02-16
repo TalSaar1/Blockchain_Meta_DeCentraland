@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import RowLands from '../components/row-lands';
 import Modal from '../components/modal';
-import { LAND_NFT, LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
+import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
 import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
 const MapContainer = styled.div`
@@ -62,18 +62,19 @@ function Map({ map, setMap, contract, address, owner }) {
 
   const buyLand = async () => {
     if (typeof selectedLand !== 'undefined') {
-      const success = await contract.methods.buyLand(selectedLand.row, selectedLand.col).send({ from: address });
-      if (success) {
+      const success = await contract.methods.buyLand(selectedLand.tokenId, selectedLand.price).send({ from: address });
+      console.log(success);
+      /*if (success) {
         const response = await contract.methods.getMap().call();
         setMap(response);
         setModelOpen(false);
-      }
+      }*/
     }
   }
 
   const updateLand = async (newLand) => {
     if (typeof selectedLand !== 'undefined') {
-      const success = await contract.methods.setLand(newLand).send({ from: address });
+      const success = await contract.methods.updateLand(newLand.tokenId, JSON.stringify(newLand)).send({ from: address });
       if (success) {
         const response = await contract.methods.getMap().call();
         setMap(response);
@@ -108,7 +109,7 @@ function Map({ map, setMap, contract, address, owner }) {
     <>
         {renderContent()}
       <MapContainer>
-        {map.map((lands, row) => <RowLands key={row} lands={lands} backgroundColor={backgroundColor} setSelectedLand={setSelectedLand} />)}
+        {map.map((lands, row) => <RowLands key={row} row={row} lands={lands} backgroundColor={backgroundColor} setSelectedLand={setSelectedLand} />)}
       </MapContainer>
 
       <Modal

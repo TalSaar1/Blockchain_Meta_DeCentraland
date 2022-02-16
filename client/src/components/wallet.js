@@ -51,13 +51,10 @@ function Wallet({ web3, contract, address }) {
         setBalance(web3.utils.fromWei(response, 'ether'));
     }
     
-    useEffect(() => {
-        updateBalance();
-    }, []);
+    useEffect(updateBalance, []);
 
-
-    const buyTokens = async (e) => {
-        e.preventDefault();
+    const buyTokens = async (event) => {
+        event.preventDefault();
         await contract.methods.buyTokens().send({ from: address, value: web3.utils.toWei(tokens.toString(), 'ether').slice(0, -1) });
         updateBalance();
         setTokens(0);
@@ -92,13 +89,13 @@ function Wallet({ web3, contract, address }) {
                 {renderRightCol()}
             </Row>
             <Header small>Buy Tokens</Header>
-            <form onSubmit={e => buyTokens(e)}>
+            <form onSubmit={event => buyTokens(event)}>
                 <Row>
                     <ColLeft>
                         <Category>Amount</Category>
                     </ColLeft>
                     <ColWithRight>
-                        <input type='number' value={tokens} onChange={e => setTokens(Number(e.target.value))} style={{ color: '#000000' }}/>
+                        <input type='number' value={tokens} onChange={event => setTokens(Number(event.target.value))} style={{ color: '#000000' }}/>
                     </ColWithRight>
                     {renderRightCol()}
                 </Row>
