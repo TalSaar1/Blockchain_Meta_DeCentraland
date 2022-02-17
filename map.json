@@ -19,12 +19,12 @@
         {
             "tokenId": 5,
             "landType": "0",
-            "price": 8
+            "price": 14
         },
         {
             "tokenId": 6,
             "landType": "0",
-            "price": 7
+            "price": 10
         },
         {
             "tokenId": 7,
@@ -37,12 +37,12 @@
         {
             "tokenId": 9,
             "landType": "0",
-            "price": 16
+            "price": 9
         },
         {
             "tokenId": 10,
             "landType": "0",
-            "price": 14
+            "price": 9
         }
     ],
     [
@@ -65,12 +65,12 @@
         {
             "tokenId": 15,
             "landType": "0",
-            "price": 5
+            "price": 6
         },
         {
             "tokenId": 16,
             "landType": "0",
-            "price": 10
+            "price": 11
         },
         {
             "tokenId": 17,
@@ -83,12 +83,12 @@
         {
             "tokenId": 19,
             "landType": "0",
-            "price": 8
+            "price": 9
         },
         {
             "tokenId": 20,
             "landType": "0",
-            "price": 11
+            "price": 8
         }
     ],
     [
@@ -179,12 +179,12 @@
         {
             "tokenId": 41,
             "landType": "0",
-            "price": 15
+            "price": 20
         },
         {
             "tokenId": 42,
             "landType": "0",
-            "price": 16
+            "price": 13
         },
         {
             "tokenId": 43,
@@ -213,24 +213,24 @@
         {
             "tokenId": 49,
             "landType": "0",
-            "price": 11
+            "price": 9
         },
         {
             "tokenId": 50,
             "landType": "0",
-            "price": 20
+            "price": 8
         }
     ],
     [
         {
             "tokenId": 51,
             "landType": "0",
-            "price": 10
+            "price": 14
         },
         {
             "tokenId": 52,
             "landType": "0",
-            "price": 9
+            "price": 6
         },
         {
             "tokenId": 53,
@@ -264,7 +264,7 @@
         {
             "tokenId": 60,
             "landType": "0",
-            "price": 11
+            "price": 5
         }
     ],
     [
@@ -360,7 +360,7 @@
         {
             "tokenId": 82,
             "landType": "0",
-            "price": 16
+            "price": 10
         },
         {
             "tokenId": 83,
@@ -373,12 +373,12 @@
         {
             "tokenId": 85,
             "landType": "0",
-            "price": 16
+            "price": 20
         },
         {
             "tokenId": 86,
             "landType": "0",
-            "price": 19
+            "price": 10
         },
         {
             "tokenId": 87,
@@ -391,24 +391,24 @@
         {
             "tokenId": 89,
             "landType": "0",
-            "price": 7
+            "price": 15
         },
         {
             "tokenId": 90,
             "landType": "0",
-            "price": 6
+            "price": 13
         }
     ],
     [
         {
             "tokenId": 91,
             "landType": "0",
-            "price": 12
+            "price": 15
         },
         {
             "tokenId": 92,
             "landType": "0",
-            "price": 12
+            "price": 16
         },
         {
             "tokenId": 93,
@@ -426,7 +426,7 @@
         {
             "tokenId": 96,
             "landType": "0",
-            "price": 12
+            "price": 11
         },
         {
             "tokenId": 97,
@@ -439,12 +439,12 @@
         {
             "tokenId": 99,
             "landType": "0",
-            "price": 9
+            "price": 8
         },
         {
             "tokenId": 100,
             "landType": "0",
-            "price": 20
+            "price": 16
         }
     ]
 ]

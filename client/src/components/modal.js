@@ -54,55 +54,146 @@ const Button = styled.button`
     }
 `;
 
+const CheckBoxWrapper = styled.div`
+  position: relative;
+`;
+
+const CheckBoxLabel = styled.label`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42px;
+  height: 26px;
+  border-radius: 15px;
+  background: #bebebe;
+  cursor: pointer;
+  &::after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    margin: 3px;
+    background: #ffffff;
+    box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.2);
+    transition: 0.2s;
+  }
+`;
+
+const CheckBox = styled.input`
+  opacity: 0;
+  z-index: 1;
+  border-radius: 15px;
+  width: 42px;
+  height: 26px;
+  &:checked + ${CheckBoxLabel} {
+    background: #4fbe79;
+    &::after {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      margin-left: 21px;
+      transition: 0.2s;
+    }
+  }
+`;
+
 function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, updateLand, play, onClose }) {
     const [newLand, setNewLand] = useState(undefined);
+    const [forSale, setForSale] = useState(undefined);
 
     useEffect(() => {
-        setNewLand(land);
+        if (typeof land !== 'undefined') {
+            setNewLand(land);
+            setForSale(typeof land.price !== 'undefined');
+        }
     }, [land]);
 
-    if (!modalOpen)
-        return null;
+    useEffect(() => {
+        if (!forSale && typeof land !== 'undefined' && typeof land.price !== 'undefined') {
+            delete newLand['price'];
+            setNewLand(newLand);
+        }
+    }, [forSale]);
+
+    function importGames(files) {
+        let games = [''];
+        files.keys().map(item => games.push(item.slice(2, item.length - 3)));
+        return games;
+    }
+
+    const allGames = importGames(require.context('../games', false, /\.js$/));
 
     const renderNoRoad = () => {
         if (land.landType !== LAND_ROAD) {
             return (
                 <>
-                    {owner && land.landType !== LAND_PARK ? 
+                    {land.owner === address ?
                         <Row>
                             <ColLeft>
-                                <Category>Price</Category>
+                                <Category>Game</Category>
                             </ColLeft>
-                            <ColWithRight>
-                                <input 
-                                    type='number'
-                                    defaultValue={land.price}
-                                    onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
-                                    disabled={!owner || address !== land.owner}
-                                    style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
-                                />
-                            </ColWithRight>
-                            <ColRight>
-                                <input type='text' value={TOKEN_SYMBOL} disabled />
-                            </ColRight>
+                            <Col>
+                                <select defaultValue={land.game} onChange={e => setNewLand({ ...newLand, game: e.target.value })}>
+                                    {allGames.map((option, index) => <option key={index} value={option}>{option}</option>)}
+                                </select>
+                            </Col>
                         </Row>
+                        : typeof land.game !== 'undefined' ?
+                            <Row>
+                                <ColLeft>
+                                    <Category>Game</Category>
+                                </ColLeft>
+                                <Col>
+                                    <input type='text' value={land.game} disabled />
+                                </Col>
+                            </Row>
+                        : ''
+                    }
+                    {owner && land.landType !== LAND_PARK ?
+                        <>
+                            {land.owner === address ? 
+                                <Row>
+                                    <ColLeft>
+                                        <Category>For Sale</Category>
+                                    </ColLeft>
+                                    <Col>
+                                        <CheckBoxWrapper>
+                                            <CheckBox id='checkbox' type='checkbox' defaultChecked={forSale} onChange={e => setForSale(e.target.checked)} />
+                                            <CheckBoxLabel htmlFor='checkbox' />
+                                        </CheckBoxWrapper>
+                                    </Col>
+                                </Row>
+                                :
+                                ''
+                            }
+                            {forSale ? 
+                                <Row>
+                                    <ColLeft>
+                                        <Category>Price</Category>
+                                    </ColLeft>
+                                    <ColWithRight>
+                                        <input 
+                                            type='number'
+                                            defaultValue={land.price}
+                                            onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
+                                            disabled={!owner || address !== land.owner}
+                                            style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
+                                        />
+                                    </ColWithRight>
+                                    <ColRight>
+                                        <input type='text' value={TOKEN_SYMBOL} disabled />
+                                    </ColRight>
+                                </Row>
+                                :
+                                ''
+                            }
+                        </>
                         :
                         ''
                     }
-                    <Row>
-                        <ColLeft>
-                            <Category>Content</Category>
-                        </ColLeft>
-                        <Col>
-                            <input
-                                type='text'
-                                defaultValue={land.content}
-                                onChange={e => setNewLand({ ...newLand, content: e.target.value })}
-                                disabled={!owner || address !== land.owner}
-                                style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
-                            />
-                        </Col>
-                    </Row>
                 </>
             )
         }
@@ -114,17 +205,20 @@ function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, upda
         }
         if (!owner) {
             if (land.content !== '') {
-                return (<Button onClick={play}>Play</Button>)
+                return (<Button onClick={() => play(land)}>Play</Button>)
             }
             return <></>;
         }
         if (address === land.owner) {
             return (<Button onClick={() => updateLand(newLand)}>Update</Button>)
         }
-        if (land.landType !== LAND_PARK) {
-            return (<Button onClick={buyLand}>Buy</Button>)
+        if (land.landType !== LAND_PARK && forSale) {
+            return (<Button onClick={() => buyLand(land)}>Buy</Button>)
         }
     }
+
+    if (!modalOpen)
+        return null;
 
     return ReactDOM.createPortal(
         <WrapperContainer>

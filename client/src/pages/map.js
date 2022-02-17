@@ -35,10 +35,33 @@ const LandType = styled.div`
   margin-left: 35px;
 `;
 
-
-function Map({ map, setMap, contract, address, owner }) {
+function Map({ contract, address, owner, setPage }) {
+  const [map, setMap] = useState([]);
   const [modalOpen, setModelOpen] = useState(false);
   const [selectedLand, setSelectedLand] = useState(undefined);
+
+  const updateMap = async () => {
+    const size = Math.sqrt(await contract.methods.getTokensCount().call());
+    const response = await contract.methods.getMap().call();
+    const owners = response[0];
+    const tokens = JSON.parse(JSON.stringify(response[1]));
+    const world = [];
+
+    for (let i = 0; i < size; i++) {
+      const row = [];
+
+      for (let j = 0; j < size; j++) {
+        const land = JSON.parse(tokens[i * size + j]);
+        row.push({ ...land, owner: owners[i * size + j]});
+      }
+
+      world.push(row);
+    }
+
+    setMap(world);
+  }
+
+  useEffect(updateMap, []);
   
   const renderContent = () => {
     return (
@@ -60,32 +83,38 @@ function Map({ map, setMap, contract, address, owner }) {
     )
   }
 
-  const buyLand = async () => {
-    if (typeof selectedLand !== 'undefined') {
-      const success = await contract.methods.buyLand(selectedLand.tokenId, selectedLand.price).send({ from: address });
-      console.log(success);
-      /*if (success) {
-        const response = await contract.methods.getMap().call();
-        setMap(response);
-        setModelOpen(false);
-      }*/
+  const buyLand = async (land) => {
+    console.log(land)
+    const success = await contract.methods.buyLand(land.tokenId, land.price).send({ from: address });
+    console.log(success);
+    /*if (success) {
+      const response = await contract.methods.getMap().call();
+      setMap(response);
+      setModelOpen(false);
+    }*/
+  }
+
+  const updateLand = async (land) => {
+    if (land.game === '') {
+      delete land['game'];
+    }
+    if (typeof land.row !== 'undefined') {
+      delete land['row'];
+    }
+    if (typeof land.col !== 'undefined') {
+      delete land['col'];
+    }
+
+    const success = await contract.methods.updateLand(land.tokenId, JSON.stringify(land)).send({ from: address });
+    if (success) {
+      setModelOpen(false);
+      updateMap();
     }
   }
 
-  const updateLand = async (newLand) => {
-    if (typeof selectedLand !== 'undefined') {
-      const success = await contract.methods.updateLand(newLand.tokenId, JSON.stringify(newLand)).send({ from: address });
-      if (success) {
-        const response = await contract.methods.getMap().call();
-        setMap(response);
-        setModelOpen(false);
-      }
-    }
-  }
-
-  const play = async () => {
+  const play = async (land) => {
     setModelOpen(false);
-    alert('That is a good game');
+    setPage(land.game);
   }
 
   useEffect(() => {
@@ -109,7 +138,15 @@ function Map({ map, setMap, contract, address, owner }) {
     <>
         {renderContent()}
       <MapContainer>
-        {map.map((lands, row) => <RowLands key={row} row={row} lands={lands} backgroundColor={backgroundColor} setSelectedLand={setSelectedLand} />)}
+        {map.map((lands, row) => {
+          return <RowLands
+            key={row}
+            row={row}
+            lands={lands}
+            backgroundColor={backgroundColor}
+            setSelectedLand={setSelectedLand}
+          />
+        })}
       </MapContainer>
 
       <Modal

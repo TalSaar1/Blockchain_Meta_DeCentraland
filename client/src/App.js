@@ -9,6 +9,8 @@ import Map from './pages/map';
 import Wallet from './components/wallet';
 import { MAP, WALLET } from './constants/pages';
 
+import Snake from './games/snake';
+
 const GlobalStyle = createGlobalStyle`
   body {
     background: #505050;
@@ -16,12 +18,17 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 
-  input {
+  input,
+  select {
     border: 1px solid #ffffff;
     width: 100%;
     padding: 12px;
     color: #ffffff;
     font-size: 15px;
+  }
+
+  select {
+    color: #000000;
   }
 `;
 
@@ -30,7 +37,6 @@ function App() {
   const [accounts, setAccounts] = useState([]);
   const [contract, setContract] = useState([]);
   const [tokenContract, setTokenContract] = useState([]);
-  const [map, setMap] = useState([]);
   const [owner, setOwner] = useState(undefined);
   const [page, setPage] = useState(MAP);
 
@@ -56,6 +62,7 @@ function App() {
           TokenContract.abi,
           tokenDeployedNetwork && tokenDeployedNetwork.address,
         );
+
         setWeb3(web3);
         setAccounts(accounts);
         setContract(contract);
@@ -69,79 +76,6 @@ function App() {
     init();
   }, []);
 
-  useEffect(() => {
-    const load = async () => {
-      if (typeof contract.methods === 'undefined')
-        return;
-        const size = Math.sqrt(await contract.methods.getTokensCount().call());
-        const response = await contract.methods.getMap().call();
-        const owners = response[0];
-        const tokens = JSON.parse(JSON.stringify(response[1]));
-        const world = [];
-        for (let i = 0; i < size; i++) {
-          const row = [];
-          for (let j = 0; j < size; j++) {
-            const land = JSON.parse(tokens[i * size + j]);
-            row.push({ ...land, owner: owners[i * size + j]});
-          }
-          world.push(row)
-        }
-        setMap(world);
-
-        /*const map = [];
-        for (let i = 0; i < 100; i++) {
-          const row = [];
-          for (let j = 0; j < 100; j++) {
-            if (i % 17 === 15 || i % 17 === 16 || j % 17 === 15 || j % 17 === 16) {
-              row.push({landType: '2'});
-            } else if (i >= 17 && i <= 48 && j >= 17 && j <= 48 || i >= 51 && i <= 82 && j >= 51 && j <= 82) {
-              row.push({
-                landType: '1',
-              });
-            } else {
-              row.push({
-                landType: '0',
-                price: Math.floor(Math.random() * 16) + 5,
-              });
-            }
-          }
-          map.push(row);
-        }
-        console.log(JSON.stringify(map, null, 4))
-        setMap(map);*/
-
-        /*const map = [];
-        for (let i = 0; i < 10; i++) {
-          const row = [];
-          for (let j = 0; j < 10; j++) {
-            if (i % 4 === 2 || i % 4 === 3 || j % 4 === 2 || j % 4 === 3) {
-              row.push({tokenId: i * 10 + j + 1, landType: '2'});
-            } else if (i >= 0 && i <= 1 && j >= 0 && j <= 1 || i >= 4 && i <= 5 && j >= 4 && j <= 5) {
-              row.push({
-                tokenId: i * 10 + j + 1,
-                landType: '1',
-              });
-            } else {
-              row.push({
-                tokenId: i * 10 + j + 1,
-                landType: '0',
-                price: Math.floor(Math.random() * 16) + 5,
-              });
-            }
-          }
-          map.push(row);
-        }
-        console.log(JSON.stringify(map, null, 4))
-        setMap(map);*/
-    }
-
-    if (typeof web3 !== 'undefined' 
-        && typeof accounts !== 'undefined'
-        && typeof contract !== 'undefined') {
-      load();
-    }
-  }, [web3, accounts, contract])
-
   const renderPages = () => {
     if (typeof owner === 'undefined') {
       return <Main setOwner={setOwner} />;
@@ -149,13 +83,16 @@ function App() {
 
     if (owner) {
       switch (page) {
-        case MAP: return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
+        case MAP: return <Map contract={contract} address={accounts[0]} owner={owner} setPage={setPage} />;
         case WALLET: return <Wallet web3={web3} contract={tokenContract} address={accounts[0]} />;
         default: return <></>;
       }
+    } else {
+      switch (page) {
+        case 'snake': return <Snake size={350} />;
+        default: return <Map contract={contract} address={accounts[0]} owner={owner} setPage={setPage} />;
+      }
     }
-
-    return <Map map={map} setMap={setMap} contract={contract} address={accounts[0]} owner={owner} />;
   }
 
   return (
