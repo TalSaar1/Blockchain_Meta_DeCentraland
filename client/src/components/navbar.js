@@ -15,7 +15,6 @@ const Title = styled.div`
     text-shadow: 2px 2px 8px #ff0000;
     font-size: 40px;
     font-weight: bold;
-    cursor: pointer;
     margin-right: 40px;
 `;
 
@@ -40,7 +39,7 @@ const Button = styled.div`
     }
 `;
 
-function Navbar({ owner, setOwner, setPage }) {
+function Navbar({ owner, setPage }) {
     const renderOwnerButtons = () => {
         if (owner) {
             return (
@@ -55,7 +54,7 @@ function Navbar({ owner, setOwner, setPage }) {
     return (
         <NavBarContainer>
             <NavBarLinks>
-                <Title onClick={() => setOwner(undefined)}>E&T.Ltd</Title>
+                <Title>E&T.Ltd</Title>
                 {renderOwnerButtons()}
             </NavBarLinks>
         </NavBarContainer>

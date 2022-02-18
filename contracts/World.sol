@@ -37,17 +37,20 @@ contract World is ERC721URIStorage, Ownable {
         return (owners, map);
     }
 
-    function buyLand(uint256 tokenId, uint256 price) public payable returns (bool) {
-        address ownerOfToken = ownerOf(tokenId);
+    function sellLand(uint256 tokenId, uint256 price, address to) public payable returns (bool) {
+        /*address ownerOfToken = ownerOf(tokenId);
         token.approve(msg.sender, msg.value * price);
         bool success = token.transferFrom(msg.sender, ownerOfToken, msg.value * price);
 
         if (success) {
-            getApproved(tokenId);
+            setApprovalForAll(msg.sender, true);
+            //approve(msg.sender, tokenId);
             transferFrom(ownerOfToken, msg.sender, tokenId);
-        }
+        }*/
 
-        return success;
+        _transfer(msg.sender, to, tokenId);
+
+        return true; //success;
     }
 
     function updateLand(uint256 tokenId, string memory tokenURI) public {

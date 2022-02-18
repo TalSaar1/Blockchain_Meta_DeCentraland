@@ -16,13 +16,13 @@ const WrapperContainer = styled.div`
 `;
 
 const Container = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: ${props => props.backgroundColor};
-  padding: 40px;
-  z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: ${props => props.backgroundColor};
+    padding: 40px;
+    z-index: 1000;
 `;
 
 const LandType = styled.div`
@@ -54,69 +54,51 @@ const Button = styled.button`
     }
 `;
 
-const CheckBoxWrapper = styled.div`
-  position: relative;
+export const Tabs = styled.div`
+  overflow: hidden;
+  background: #ffffff;
+  font-family: Open Sans;
+  height: 3em;
 `;
 
-const CheckBoxLabel = styled.label`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 42px;
-  height: 26px;
-  border-radius: 15px;
-  background: #bebebe;
+export const Tab = styled.button`
+  border: none;
+  outline: none;
   cursor: pointer;
-  &::after {
-    content: "";
-    display: block;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    margin: 3px;
-    background: #ffffff;
-    box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.2);
-    transition: 0.2s;
+  width: 40%;
+  position: relative;
+
+  margin-right: 0.1em;
+  font-size: 1em;
+  border: ${props => (props.active ? "1px solid #ccc" : "")};
+  border-bottom: ${props => (props.active ? "none" : "")};
+  background-color: ${props => (props.active ? "white" : "lightgray")};
+  height: ${props => (props.active ? "3em" : "2.6em; top:.4em")};
+  transition: background-color 0.5s ease-in-out;
+
+  :hover {
+    background-color: white;
   }
 `;
-
-const CheckBox = styled.input`
-  opacity: 0;
-  z-index: 1;
-  border-radius: 15px;
-  width: 42px;
-  height: 26px;
-  &:checked + ${CheckBoxLabel} {
-    background: #4fbe79;
-    &::after {
-      content: "";
-      display: block;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      margin-left: 21px;
-      transition: 0.2s;
-    }
-  }
+export const Content = styled.div`
+  ${props => (props.active ? "" : "display:none")}
 `;
 
-function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, updateLand, play, onClose }) {
+function Modal({ modalOpen, land, backgroundColor, address, transferLand, updateLand, play, onClose }) {
     const [newLand, setNewLand] = useState(undefined);
-    const [forSale, setForSale] = useState(undefined);
+    const [toAddress, setToAddress] = useState(undefined);
+    const [active, setActive] = useState(0);
 
     useEffect(() => {
-        if (typeof land !== 'undefined') {
-            setNewLand(land);
-            setForSale(typeof land.price !== 'undefined');
-        }
+        setNewLand(land);
     }, [land]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!forSale && typeof land !== 'undefined' && typeof land.price !== 'undefined') {
             delete newLand['price'];
             setNewLand(newLand);
         }
-    }, [forSale]);
+    }, [forSale]);*/
 
     function importGames(files) {
         let games = [''];
@@ -126,7 +108,86 @@ function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, upda
 
     const allGames = importGames(require.context('../games', false, /\.js$/));
 
-    const renderNoRoad = () => {
+    const handleClick = e => {
+        const index = parseInt(e.target.id, 0);
+        if (index !== active) {
+          setActive(index);
+        }
+      };
+
+    const renderMyLand = () => {
+        return (
+            <>
+                <Tabs>
+                    <Tab onClick={handleClick} active={active === 0} id={0}>Update</Tab>
+                    <Tab onClick={handleClick} active={active === 1} id={1}>Transfer</Tab>
+                </Tabs>
+                <>
+                    <Content active={active === 0}>
+                        <h1>Update</h1>
+                        <Row>
+                            <ColLeft>
+                                <Category>Owner</Category>
+                            </ColLeft>
+                            <Col>
+                                <input type="text" value={land.owner} disabled />
+                            </Col>
+                        </Row>
+                    </Content>
+                    <Content active={active === 1}>
+                        <h1>Transfer</h1>
+                        <Row>
+                            <ColLeft>
+                                <Category>Owner</Category>
+                            </ColLeft>
+                            <Col>
+                                <input type="text" value={land.owner} disabled />
+                            </Col>
+                        </Row>
+                    </Content>
+                </>
+                <Button close onClick={onClose}>Close</Button>
+            </>
+        )
+    }
+
+    const renderOwnerLand = () => {
+        return <>Owner</>
+    }
+
+    const renderGuestLand = () => {
+        return (
+            <>
+                <Row>
+                    <ColLeft>
+                        <Category>Owner</Category>
+                    </ColLeft>
+                    <Col>
+                        <input type="text" value={land.owner} disabled />
+                    </Col>
+                </Row>
+                <Row>
+                    <ColLeft>
+                        <Category>Game</Category>
+                    </ColLeft>
+                    <Col>
+                        <input type='text' value={land.game} disabled />
+                    </Col>
+                </Row>
+                <Button close onClick={onClose}>Close</Button>
+                <Button onClick={() => play(land)}>Play</Button>
+            </>
+        )
+    }
+
+    const renderLandType = () => {
+        if (typeof address !== 'undefined') {
+            return address === land.owner ? renderMyLand() : renderOwnerLand();
+        }
+        return renderGuestLand();
+    }
+
+    /*const renderLandType = () => {
         if (land.landType !== LAND_ROAD) {
             return (
                 <>
@@ -152,70 +213,47 @@ function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, upda
                             </Row>
                         : ''
                     }
-                    {owner && land.landType !== LAND_PARK ?
-                        <>
-                            {land.owner === address ? 
-                                <Row>
-                                    <ColLeft>
-                                        <Category>For Sale</Category>
-                                    </ColLeft>
-                                    <Col>
-                                        <CheckBoxWrapper>
-                                            <CheckBox id='checkbox' type='checkbox' defaultChecked={forSale} onChange={e => setForSale(e.target.checked)} />
-                                            <CheckBoxLabel htmlFor='checkbox' />
-                                        </CheckBoxWrapper>
-                                    </Col>
-                                </Row>
-                                :
-                                ''
-                            }
-                            {forSale ? 
-                                <Row>
-                                    <ColLeft>
-                                        <Category>Price</Category>
-                                    </ColLeft>
-                                    <ColWithRight>
-                                        <input 
-                                            type='number'
-                                            defaultValue={land.price}
-                                            onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
-                                            disabled={!owner || address !== land.owner}
-                                            style={{ color: !owner || address !== land.owner ? '#ffffff' : '#000000' }}
-                                        />
-                                    </ColWithRight>
-                                    <ColRight>
-                                        <input type='text' value={TOKEN_SYMBOL} disabled />
-                                    </ColRight>
-                                </Row>
-                                :
-                                ''
-                            }
-                        </>
+                    {typeof address !== 'undefined' && land.landType !== LAND_PARK ?
+                        <Row>
+                            <ColLeft>
+                                <Category>Price</Category>
+                            </ColLeft>
+                            <ColWithRight>
+                                <input 
+                                    type='number'
+                                    defaultValue={land.price}
+                                    onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
+                                    disabled={address !== land.owner}
+                                    style={{ color: address !== land.owner ? '#ffffff' : '#000000' }}
+                                />
+                            </ColWithRight>
+                            <ColRight>
+                                <input type='text' value={TOKEN_SYMBOL} disabled />
+                            </ColRight>
+                        </Row>
                         :
                         ''
                     }
                 </>
             )
         }
-    }
+    }*/
 
-    const functionButton = () => {
-        if (land.landType === LAND_ROAD) {
-            return <></>;
-        }
-        if (!owner) {
-            if (land.content !== '') {
-                return (<Button onClick={() => play(land)}>Play</Button>)
+    /*const functionButton = () => {
+        if (typeof address === 'undefined') {
+            if (land.game !== '') {
+                return (<Button onClick={() => play(land)}>Play</Button>);
             }
-            return <></>;
+        } else if (address === land.owner) {
+            return (
+                <>
+                    <Button onClick={() => updateLand(newLand)}>Update</Button>
+                    <Button onClick={() => transferLand(land, toAddress)}>Transfer</Button>
+                </>
+            );
         }
-        if (address === land.owner) {
-            return (<Button onClick={() => updateLand(newLand)}>Update</Button>)
-        }
-        if (land.landType !== LAND_PARK && forSale) {
-            return (<Button onClick={() => buyLand(land)}>Buy</Button>)
-        }
-    }
+        return <></>;
+    }*/
 
     if (!modalOpen)
         return null;
@@ -224,17 +262,7 @@ function Modal({ modalOpen, land, backgroundColor, owner, address, buyLand, upda
         <WrapperContainer>
             <Container backgroundColor={backgroundColor(land)}>
                 <LandType>{LAND_TYPE[land.landType]} ({land.row},{land.col})</LandType>
-                <Row>
-                    <ColLeft>
-                        <Category>Owner</Category>
-                    </ColLeft>
-                    <Col>
-                        <input type="text" value={land.owner} disabled />
-                    </Col>
-                </Row>
-                {renderNoRoad()}
-                <Button close onClick={onClose}>Close</Button>
-                {functionButton()}
+                {renderLandType()}
             </Container>
         </WrapperContainer>,
         document.getElementById('portal')

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import TokenContract from '../contracts/Token.json';
 import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
 import { TOKEN_SYMBOL } from '../constants/symbols';
 
@@ -41,17 +42,32 @@ const Button = styled.button`
     }
 `;
 
-function Wallet({ web3, contract, address }) {
+function Wallet({ web3, address }) {
+    const [contract, setContract] = useState(undefined);
     const [balance, setBalance] = useState(0);
     const [tokens, setTokens] = useState(0);
-
    
     const updateBalance = async () => {
-        const response = await contract.methods.balanceOf(address).call();
-        setBalance(web3.utils.fromWei(response, 'ether'));
+        if (typeof contract !== 'undefined') {
+            const response = await contract.methods.balanceOf(address).call();
+            setBalance(web3.utils.fromWei(response, 'ether'));
+        }
     }
     
-    useEffect(updateBalance, []);
+    useEffect(() => {
+        const init = async () => {
+            const networkId = await web3.eth.net.getId();
+            const deployedNetwork = TokenContract.networks[networkId];
+            const contract = new web3.eth.Contract(
+                TokenContract.abi,
+                deployedNetwork && deployedNetwork.address,
+            );
+            setContract(contract);
+        }
+        init();
+    }, [web3]);
+
+    useEffect(updateBalance, [contract]);
 
     const buyTokens = async (event) => {
         event.preventDefault();

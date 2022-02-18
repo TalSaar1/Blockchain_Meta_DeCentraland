@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import RowLands from '../components/row-lands';
-import Modal from '../components/modal';
+import RowLands from './row-lands';
+import Modal from './modal';
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
 import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
@@ -35,35 +35,13 @@ const LandType = styled.div`
   margin-left: 35px;
 `;
 
-function Map({ contract, address, owner, setPage }) {
-  const [map, setMap] = useState([]);
+function Map({ address, contract, map, updateMap }) {
   const [modalOpen, setModelOpen] = useState(false);
   const [selectedLand, setSelectedLand] = useState(undefined);
 
-  const updateMap = async () => {
-    const size = Math.sqrt(await contract.methods.getTokensCount().call());
-    const response = await contract.methods.getMap().call();
-    const owners = response[0];
-    const tokens = JSON.parse(JSON.stringify(response[1]));
-    const world = [];
-
-    for (let i = 0; i < size; i++) {
-      const row = [];
-
-      for (let j = 0; j < size; j++) {
-        const land = JSON.parse(tokens[i * size + j]);
-        row.push({ ...land, owner: owners[i * size + j]});
-      }
-
-      world.push(row);
-    }
-
-    setMap(world);
-  }
-
-  useEffect(updateMap, []);
+  //useEffect(updateMap, []);
   
-  const renderContent = () => {
+  /*const renderContent = () => {
     return (
       <ContentContainer>
         <ContentTitle>Content</ContentTitle>
@@ -81,12 +59,28 @@ function Map({ contract, address, owner, setPage }) {
         <LandType style={{ color: ROAD_COLOR}}>Road</LandType>
       </ContentContainer>
     )
+  }*/
+
+  const renderContent = () => {
+    return (
+      <ContentContainer>
+        <ContentTitle>Content</ContentTitle>
+        <LandType style={{ color: MY_LAND_COLOR}}>My Land</LandType>
+        <LandType style={{ color: LAND_COLOR}}>Land</LandType>
+        <LandType style={{ color: PARK_COLOR}}>Park</LandType>
+        <LandType style={{ color: ROAD_COLOR}}>Road</LandType>
+      </ContentContainer>
+    )
   }
 
-  const buyLand = async (land) => {
-    console.log(land)
-    const success = await contract.methods.buyLand(land.tokenId, land.price).send({ from: address });
-    console.log(success);
+  const transferLand = async (land, to) => {
+    //const success = await contract.methods.buyLand(land.tokenId, land.price).send({ from: address });
+    try {
+      const success = await contract.methods.transferLand(land.tokenId, land.price, to).send({ from: address });
+      console.log(success);
+    } catch (error) {
+      alert(error);
+    }
     /*if (success) {
       const response = await contract.methods.getMap().call();
       setMap(response);
@@ -114,17 +108,30 @@ function Map({ contract, address, owner, setPage }) {
 
   const play = async (land) => {
     setModelOpen(false);
-    setPage(land.game);
+    //setPage(land.game);
   }
 
   useEffect(() => {
     setModelOpen(typeof selectedLand !== 'undefined');
   }, [selectedLand]);
 
-  const backgroundColor = (land) => {
+  /*const backgroundColor = (land) => {
     switch (land.landType) {
       case LAND_NFT:
         return owner && land.owner === address ? MY_LAND_COLOR : !owner && land.content !== '' ? GAME_COLOR : LAND_COLOR;
+      case LAND_PARK:
+        return PARK_COLOR;
+      case LAND_ROAD:
+        return ROAD_COLOR;
+      default:
+        return BLACK_COLOR;
+    }
+  }*/
+
+  const backgroundColor = (land) => {
+    switch (land.landType) {
+      case LAND_NFT:
+        return typeof address !== 'undefined' && land.owner === address ? MY_LAND_COLOR : typeof address === 'undefined' && land.content !== '' ? GAME_COLOR : LAND_COLOR;
       case LAND_PARK:
         return PARK_COLOR;
       case LAND_ROAD:
@@ -136,7 +143,7 @@ function Map({ contract, address, owner, setPage }) {
 
   return (
     <>
-        {renderContent()}
+      {renderContent()}
       <MapContainer>
         {map.map((lands, row) => {
           return <RowLands
@@ -153,13 +160,12 @@ function Map({ contract, address, owner, setPage }) {
         modalOpen={modalOpen}
         land={selectedLand}
         backgroundColor={backgroundColor}
-        owner={owner}
         address={address}
-        buyLand={buyLand}
+        transferLand={transferLand}
         updateLand={updateLand}
         play={play}
         onClose={() => setModelOpen(false)}
-      ></Modal>
+      />
     </>
   );
 }
