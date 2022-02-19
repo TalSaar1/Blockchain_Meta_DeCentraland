@@ -313,4 +313,4 @@ function shallowEquals(arr1, arr2) {
     }
   }
   
-  export default Snake;
+export default Snake;

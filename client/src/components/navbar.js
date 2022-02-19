@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MAP, WALLET } from '../constants/pages';
+import { MAIN, OWNER, GUEST, MAP, WALLET } from '../constants/pages';
 
 const NavBarContainer = styled.div`
     border-bottom: 2px solid #ffffff;
@@ -16,6 +16,7 @@ const Title = styled.div`
     font-size: 40px;
     font-weight: bold;
     margin-right: 40px;
+    cursor: pointer;
 `;
 
 const NavBarLinks = styled.div`
@@ -39,14 +40,18 @@ const Button = styled.div`
     }
 `;
 
-function Navbar({ owner, setPage }) {
+function Navbar({ page, setPage, setOwnerPage, setGuestPage }) {
     const renderOwnerButtons = () => {
-        if (owner) {
+        if (page === OWNER) {
             return (
                 <>
-                    <Button onClick={() => setPage(MAP)}>Map</Button>
-                    <Button onClick={() => setPage(WALLET)}>My Wallet</Button>
+                    <Button onClick={() => setOwnerPage(MAP)}>Map</Button>
+                    <Button onClick={() => setOwnerPage(WALLET)}>My Wallet</Button>
                 </>
+            )
+        } else if (page === GUEST) {
+            return (
+                <Button onClick={() => setGuestPage(MAP)}>Map</Button>
             )
         }
     }
@@ -54,7 +59,7 @@ function Navbar({ owner, setPage }) {
     return (
         <NavBarContainer>
             <NavBarLinks>
-                <Title>E&T.Ltd</Title>
+                <Title onClick={() => setPage(MAIN)}>E&T.Ltd</Title>
                 {renderOwnerButtons()}
             </NavBarLinks>
         </NavBarContainer>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/navbar';
-import Map from '../components/map';
+import OwnerMap from '../components/owner-map';
 import Wallet from '../components/wallet';
 import { WALLET } from '../constants/pages';
 
-function Owner({ web3, contract, map, updateMap }) {
-    const [page, setPage] = useState(undefined);
+function Owner({ web3, contract, map, updateMap, ownerPage }) {
     const [address, setAddress] = useState(undefined);
 
     useEffect(() => {
@@ -18,8 +16,7 @@ function Owner({ web3, contract, map, updateMap }) {
 
     return (
         <>
-            <Navbar owner={true} setPage={setPage} />
-            {page === WALLET ? <Wallet web3={web3} address={address} /> : <Map address={address} contract={contract} map={map} updateMap={updateMap} />}
+            {ownerPage === WALLET ? <Wallet web3={web3} address={address} /> : <OwnerMap address={address} contract={contract} map={map} updateMap={updateMap} />}
         </>
     )
 }

@@ -1,14 +1,19 @@
 import React from 'react';
-import Navbar from '../components/navbar';
-import Map from '../components/map';
+import GuestMap from '../components/guest-map';
+import Snake from '../games/snake';
+import { SNAKE } from '../constants/games';
 
-function Guest({ contract, map, updateMap }) {
-    //const [page, setPage] = useState(undefined);
+function Guest({ map, guestPage, setGuestPage }) {
+    const renderGuest = () => {
+        switch (guestPage) {
+            case SNAKE: return <Snake size={350} />;
+            default: return <GuestMap map={map} setGuestPage={setGuestPage} />
+        }
+    }
 
     return (
         <>
-            <Navbar owner={false} setPage={undefined} />
-            <Map address={undefined} contract={contract} map={map} updateMap={updateMap} />
+            {renderGuest()}
         </>
     )
 }

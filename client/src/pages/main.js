@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { OWNER, GUEST } from '../constants/pages';
 
 const Container = styled.div`
   position: relative;
@@ -45,15 +46,15 @@ const Button = styled.button`
   }
 `;
 
-function Main({ setOwner }) {
+function Main({ setPage }) {
   return (
     <Container>
       <Header big>Welcome to Meta DeCentraland</Header>
       <Header small>Enter As:<Header/>
       </Header>
       <Buttons>
-        <Button type='button' onClick={() => setOwner(true)}>Owner</Button>
-        <Button type='button' onClick={() => setOwner(false)}>Guset</Button>
+        <Button type='button' onClick={() => setPage(OWNER)}>Owner</Button>
+        <Button type='button' onClick={() => setPage(GUEST)}>Guset</Button>
       </Buttons>
     </Container>
   )

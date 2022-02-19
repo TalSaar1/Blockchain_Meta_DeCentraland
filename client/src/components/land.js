@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ToolTip from './tool-tip';
-import { LAND_TYPE } from '../constants/types';
+import { LAND_NFT, LAND_ROAD, LAND_TYPE } from '../constants/types';
 import { TOKEN_SYMBOL } from '../constants/symbols';
 
 const Container = styled.div`
@@ -12,9 +12,21 @@ const Container = styled.div`
     cursor: pointer;
 `;
 
-function Land({ row, col, land, backgroundColor, setSelectedLand }) {
+function Land({ row, col, land, backgroundColor, setSelectedLand, owner }) {
+    const toolTipText = () => {
+        let text = LAND_TYPE[land.landType] + ' (' + row + ',' + col + ') ';
+
+        if (owner && land.landType === LAND_NFT) {
+            text += 'Price: ' + land.price + ' ' + TOKEN_SYMBOL;
+        } else if (land.game !== '' && land.landType !== LAND_ROAD) {
+            text += 'Game: ' + land.game;
+        }
+
+        return text;
+    } 
+
     return (
-        <ToolTip toolTipText={LAND_TYPE[land.landType] + ' (' + row + ',' + col + ') Price: ' + land.price + ' ' + TOKEN_SYMBOL}>
+        <ToolTip toolTipText={toolTipText()}>
             <Container
                 backgroundColor={() => backgroundColor(land)}
                 onClick={() => setSelectedLand({ ...land, row, col })}

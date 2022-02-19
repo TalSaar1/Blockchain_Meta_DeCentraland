@@ -17,7 +17,7 @@ module.exports = async (deployer) => {
       const world = JSON.parse(data);
       world.map(rowLands => {
         rowLands.map(land => {
-          worldInstance.mint(land.tokenId, JSON.stringify(land))
+          worldInstance.mint(land)
         });
       });
     });
