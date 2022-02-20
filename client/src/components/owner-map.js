@@ -5,9 +5,25 @@ import { MapContainer, ContentContainer, ContentTitle, LandType } from '../style
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
 import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
-function OwnerMap({ address, contract, map, updateMap }) {
+import TokenContract from '../contracts/Token.json';
+
+function OwnerMap({ web3, address, contract, map, updateMap }) {
   const [modalOpen, setModelOpen] = useState(false);
   const [selectedLand, setSelectedLand] = useState(undefined);
+  const [contractToken, setContractToken] = useState(undefined);
+
+  useEffect(() => {
+    const init = async () => {
+        const networkId = await web3.eth.net.getId();
+        const deployedNetwork = TokenContract.networks[networkId];
+        const contractToken = new web3.eth.Contract(
+            TokenContract.abi,
+            deployedNetwork && deployedNetwork.address,
+        );
+        setContractToken(contractToken);
+    }
+    init();
+  }, [web3]);
 
   const renderContent = () => {
     return (
@@ -19,6 +35,12 @@ function OwnerMap({ address, contract, map, updateMap }) {
         <LandType style={{ color: ROAD_COLOR}}>Road</LandType>
       </ContentContainer>
     )
+  }
+
+  const approve = async (land) => {
+    await contractToken.methods.approve(land.owner, land.price).send({ from: address });
+    const abc = await contractToken.methods.allowance(address, land.owner).call();
+    console.log(abc);
   }
 
   const transferLand = async (land, to) => {
@@ -82,6 +104,7 @@ function OwnerMap({ address, contract, map, updateMap }) {
         land={selectedLand}
         backgroundColor={backgroundColor}
         address={address}
+        approve={approve}
         transferLand={transferLand}
         updateLand={updateLand}
         onClose={() => setModelOpen(false)}

@@ -5,7 +5,7 @@ import { MapContainer, ContentContainer, ContentTitle, LandType } from '../style
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
 import { LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
-function GuestMap({ map, setGuestPage }) {
+function GuestMap({ map, setGame }) {
   const [modalOpen, setModelOpen] = useState(false);
   const [selectedLand, setSelectedLand] = useState(undefined);
 
@@ -23,7 +23,7 @@ function GuestMap({ map, setGuestPage }) {
 
   const play = (land) => {
     setModelOpen(false);
-    setGuestPage(land.game);
+    setGame(land.game);
   }
 
   useEffect(() => {

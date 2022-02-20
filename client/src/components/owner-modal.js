@@ -5,8 +5,9 @@ import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/ta
 import { WrapperContainer, Container, LandType, Button, Tabs, Tab, Content } from '../style/modal';
 import { LAND_NFT, LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
 import { TOKEN_SYMBOL } from '../constants/symbols';
+import { games } from '../constants/games';
 
-function OwnerModal({ modalOpen, land, backgroundColor, address, transferLand, updateLand, onClose }) {
+function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transferLand, updateLand, onClose }) {
     const [newLand, setNewLand] = useState(undefined);
     const [allAddress, setAllAddress] = useState([]);
     const [toAddress, setToAddress] = useState(undefined);
@@ -15,14 +16,6 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, transferLand, u
     useEffect(() => {
         setNewLand(land);
     }, [land]);
-
-    const importGames = (files) => {
-        let games = [''];
-        files.keys().map(item => games.push(item.slice(2, item.length - 3)));
-        return games;
-    }
-
-    const allGames = importGames(require.context('../games', false, /\.js$/));
 
     const getAllAddress = async () => {
         const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');
@@ -65,7 +58,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, transferLand, u
                     </ColLeft>
                     <Col>
                         <select defaultValue={land.game} onChange={e => setNewLand({ ...newLand, game: e.target.value })}>
-                            {allGames.map((game, index) => <option key={index} value={game}>{game}</option>)}
+                            {games.map((game, index) => <option key={index} value={game}>{game}</option>)}
                         </select>
                     </Col>
                 </Row>
@@ -149,7 +142,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, transferLand, u
                                 </ColLeft>
                                 <Col>
                                     <select defaultValue={newLand.game} onChange={e => setNewLand({ ...newLand, game: e.target.value })}>
-                                        {allGames.map((game, index) => <option key={index} value={game}>{game}</option>)}
+                                        {games.map((game, index) => <option key={index} value={game}>{game}</option>)}
                                     </select>
                                 </Col>
                             </Row>
@@ -215,6 +208,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, transferLand, u
                     :
                     ''
                 }
+                <button onClick={() => approve(land)}>Approve</button>
                 <Button close onClick={onClose}>Close</Button>
             </>
         )

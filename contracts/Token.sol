@@ -19,7 +19,7 @@ contract Token is ERC20 {
 
     function buyTokens() public payable {
         require(_msgSender() != fundsWallet);
-        uint256 amount = msg.value / price;
+        uint256 amount = msg.value * (1 ether / price);
         require(balanceOf(fundsWallet) >= amount);
 
         _transfer(fundsWallet, _msgSender(), amount);

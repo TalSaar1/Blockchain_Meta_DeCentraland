@@ -3,11 +3,11 @@ const Token = artifacts.require('./Token.sol');
 const World = artifacts.require('./World.sol');
 
 module.exports = async (deployer) => {
-  deployer.deploy(Token, 'Elad Tal Coin', 'ETC');
+  await deployer.deploy(Token, 'Elad Tal Coin', 'ETC');
 
   const tokenInstance = await Token.deployed();
 
-  deployer.deploy(World, tokenInstance.address).then(worldInstance => {
+  await deployer.deploy(World, tokenInstance.address).then(worldInstance => {
     fs.readFile('./map.json', 'utf8', (err, data) => {
       if (err) {
         console.error(err);

@@ -4,19 +4,19 @@
             "tokenId": 1,
             "landType": "0",
             "game": "",
-            "price": 9
+            "price": 6
         },
         {
             "tokenId": 2,
             "landType": "0",
             "game": "",
-            "price": 11
+            "price": 10
         },
         {
             "tokenId": 3,
             "landType": "0",
             "game": "",
-            "price": 13
+            "price": 12
         },
         {
             "tokenId": 4,
@@ -35,18 +35,20 @@
             "landType": "2",
             "game": "",
             "price": 0
-        },
+        }
+    ],
+    [
         {
             "tokenId": 7,
             "landType": "0",
             "game": "",
-            "price": 7
+            "price": 18
         },
         {
             "tokenId": 8,
             "landType": "0",
             "game": "",
-            "price": 7
+            "price": 5
         },
         {
             "tokenId": 9,
@@ -58,96 +60,98 @@
             "tokenId": 10,
             "landType": "0",
             "game": "",
-            "price": 17
+            "price": 12
+        },
+        {
+            "tokenId": 11,
+            "landType": "2",
+            "game": "",
+            "price": 0
+        },
+        {
+            "tokenId": 12,
+            "landType": "2",
+            "game": "",
+            "price": 0
         }
     ],
     [
         {
-            "tokenId": 11,
-            "landType": "0",
-            "game": "",
-            "price": 17
-        },
-        {
-            "tokenId": 12,
-            "landType": "0",
-            "game": "",
-            "price": 10
-        },
-        {
             "tokenId": 13,
-            "landType": "0",
-            "game": "",
-            "price": 15
-        },
-        {
-            "tokenId": 14,
             "landType": "0",
             "game": "",
             "price": 11
         },
         {
-            "tokenId": 15,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 16,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 17,
+            "tokenId": 14,
             "landType": "0",
             "game": "",
-            "price": 7
+            "price": 6
         },
         {
-            "tokenId": 18,
+            "tokenId": 15,
             "landType": "0",
             "game": "",
             "price": 12
         },
         {
+            "tokenId": 16,
+            "landType": "0",
+            "game": "",
+            "price": 20
+        },
+        {
+            "tokenId": 17,
+            "landType": "2",
+            "game": "",
+            "price": 0
+        },
+        {
+            "tokenId": 18,
+            "landType": "2",
+            "game": "",
+            "price": 0
+        }
+    ],
+    [
+        {
             "tokenId": 19,
             "landType": "0",
             "game": "",
-            "price": 17
+            "price": 15
         },
         {
             "tokenId": 20,
             "landType": "0",
             "game": "",
-            "price": 12
-        }
-    ],
-    [
-        {
-            "tokenId": 21,
-            "landType": "0",
-            "game": "",
-            "price": 17
+            "price": 10
         },
         {
-            "tokenId": 22,
+            "tokenId": 21,
             "landType": "0",
             "game": "",
             "price": 18
         },
         {
-            "tokenId": 23,
-            "landType": "0",
-            "game": "",
-            "price": 9
-        },
-        {
-            "tokenId": 24,
+            "tokenId": 22,
             "landType": "0",
             "game": "",
             "price": 15
         },
+        {
+            "tokenId": 23,
+            "landType": "2",
+            "game": "",
+            "price": 0
+        },
+        {
+            "tokenId": 24,
+            "landType": "2",
+            "game": "",
+            "price": 0
+        }
+    ],
+    [
         {
             "tokenId": 25,
             "landType": "2",
@@ -162,53 +166,53 @@
         },
         {
             "tokenId": 27,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 20
+            "price": 0
         },
         {
             "tokenId": 28,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 18
+            "price": 0
         },
         {
             "tokenId": 29,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 17
+            "price": 0
         },
         {
             "tokenId": 30,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 13
+            "price": 0
         }
     ],
     [
         {
             "tokenId": 31,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 5
+            "price": 0
         },
         {
             "tokenId": 32,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 18
+            "price": 0
         },
         {
             "tokenId": 33,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 16
+            "price": 0
         },
         {
             "tokenId": 34,
-            "landType": "0",
+            "landType": "2",
             "game": "",
-            "price": 7
+            "price": 0
         },
         {
             "tokenId": 35,
@@ -219,402 +223,6 @@
         {
             "tokenId": 36,
             "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 37,
-            "landType": "0",
-            "game": "",
-            "price": 14
-        },
-        {
-            "tokenId": 38,
-            "landType": "0",
-            "game": "",
-            "price": 15
-        },
-        {
-            "tokenId": 39,
-            "landType": "0",
-            "game": "",
-            "price": 17
-        },
-        {
-            "tokenId": 40,
-            "landType": "0",
-            "game": "",
-            "price": 13
-        }
-    ],
-    [
-        {
-            "tokenId": 41,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 42,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 43,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 44,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 45,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 46,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 47,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 48,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 49,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 50,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        }
-    ],
-    [
-        {
-            "tokenId": 51,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 52,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 53,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 54,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 55,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 56,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 57,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 58,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 59,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 60,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        }
-    ],
-    [
-        {
-            "tokenId": 61,
-            "landType": "0",
-            "game": "",
-            "price": 11
-        },
-        {
-            "tokenId": 62,
-            "landType": "0",
-            "game": "",
-            "price": 10
-        },
-        {
-            "tokenId": 63,
-            "landType": "0",
-            "game": "",
-            "price": 11
-        },
-        {
-            "tokenId": 64,
-            "landType": "0",
-            "game": "",
-            "price": 7
-        },
-        {
-            "tokenId": 65,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 66,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 67,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 68,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 69,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 70,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        }
-    ],
-    [
-        {
-            "tokenId": 71,
-            "landType": "0",
-            "game": "",
-            "price": 20
-        },
-        {
-            "tokenId": 72,
-            "landType": "0",
-            "game": "",
-            "price": 17
-        },
-        {
-            "tokenId": 73,
-            "landType": "0",
-            "game": "",
-            "price": 10
-        },
-        {
-            "tokenId": 74,
-            "landType": "0",
-            "game": "",
-            "price": 9
-        },
-        {
-            "tokenId": 75,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 76,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 77,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 78,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 79,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 80,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        }
-    ],
-    [
-        {
-            "tokenId": 81,
-            "landType": "0",
-            "game": "",
-            "price": 14
-        },
-        {
-            "tokenId": 82,
-            "landType": "0",
-            "game": "",
-            "price": 16
-        },
-        {
-            "tokenId": 83,
-            "landType": "0",
-            "game": "",
-            "price": 9
-        },
-        {
-            "tokenId": 84,
-            "landType": "0",
-            "game": "",
-            "price": 13
-        },
-        {
-            "tokenId": 85,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 86,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 87,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 88,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 89,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 90,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        }
-    ],
-    [
-        {
-            "tokenId": 91,
-            "landType": "0",
-            "game": "",
-            "price": 15
-        },
-        {
-            "tokenId": 92,
-            "landType": "0",
-            "game": "",
-            "price": 14
-        },
-        {
-            "tokenId": 93,
-            "landType": "0",
-            "game": "",
-            "price": 8
-        },
-        {
-            "tokenId": 94,
-            "landType": "0",
-            "game": "",
-            "price": 14
-        },
-        {
-            "tokenId": 95,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 96,
-            "landType": "2",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 97,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 98,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 99,
-            "landType": "1",
-            "game": "",
-            "price": 0
-        },
-        {
-            "tokenId": 100,
-            "landType": "1",
             "game": "",
             "price": 0
         }

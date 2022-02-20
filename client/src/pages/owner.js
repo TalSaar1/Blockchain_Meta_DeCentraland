@@ -16,7 +16,7 @@ function Owner({ web3, contract, map, updateMap, ownerPage }) {
 
     return (
         <>
-            {ownerPage === WALLET ? <Wallet web3={web3} address={address} /> : <OwnerMap address={address} contract={contract} map={map} updateMap={updateMap} />}
+            {ownerPage === WALLET ? <Wallet web3={web3} address={address} /> : <OwnerMap web3={web3} address={address} contract={contract} map={map} updateMap={updateMap} />}
         </>
     )
 }

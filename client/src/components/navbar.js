@@ -40,7 +40,7 @@ const Button = styled.div`
     }
 `;
 
-function Navbar({ page, setPage, setOwnerPage, setGuestPage }) {
+function Navbar({ page, setPage, setOwnerPage, setGame }) {
     const renderOwnerButtons = () => {
         if (page === OWNER) {
             return (
@@ -51,7 +51,7 @@ function Navbar({ page, setPage, setOwnerPage, setGuestPage }) {
             )
         } else if (page === GUEST) {
             return (
-                <Button onClick={() => setGuestPage(MAP)}>Map</Button>
+                <Button onClick={() => setGame(undefined)}>Map</Button>
             )
         }
     }

@@ -47,7 +47,7 @@ contract World is ERC721, Ownable {
         return (owners, map);
     }
 
-    function setLand(Land memory land) internal virtual {
+    function setLand(Land memory land) public {
         require(_exists(land.tokenId), 'Land set of nonexistent token');
         require(land.price >= 0, 'Land price cannot be negative number');
 
@@ -58,14 +58,9 @@ contract World is ERC721, Ownable {
         require(land.landType == LandType.NFT, 'Only NFT lands can be transfer');
         require(msg.sender != to, 'You cannot transfer land to yourself');
 
-        address ownerOfToken = ownerOf(land.tokenId);
-        //token.approve(msg.sender, msg.value * price);
-        bool success = token.transferFrom(ownerOfToken, msg.sender, land.price * token.getPrice());
+        token.transferFrom(to, msg.sender, land.price);
+        _transfer(msg.sender, to, land.tokenId);
 
-        if (success) {
-            _transfer(msg.sender, to, land.tokenId);
-        }
-
-        return success;
+        return true;
     }
 }

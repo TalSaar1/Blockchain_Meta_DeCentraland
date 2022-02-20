@@ -27,6 +27,13 @@ const GlobalStyle = createGlobalStyle`
   select {
     color: #000000;
   }
+
+  iframe {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: calc(100% - 102px);
+  }
 `;
 
 function App() {
@@ -35,7 +42,7 @@ function App() {
   const [map, setMap] = useState([]);
   const [page, setPage] = useState(undefined);
   const [ownerPage, setOwnerPage] = useState(MAP);
-  const [guestPage, setGuestPage] = useState(MAP);
+  const [game, setGame] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
@@ -88,7 +95,7 @@ function App() {
 
   useEffect(() => {
     setOwnerPage(MAP);
-    setGuestPage(MAP);
+    setGame(undefined);
   }, [page]);
 
   const renderPage = () => {
@@ -96,7 +103,7 @@ function App() {
       case OWNER: 
         return (<Owner web3={web3} contract={contract} map={map} updateMap={updateMap} ownerPage={ownerPage} />);
       case GUEST: 
-        return (<Guest map={map} guestPage={guestPage} setGuestPage={setGuestPage} />);
+        return (<Guest map={map} game={game} setGame={setGame} />);
       default:
         return (<Main setPage={setPage} />);
     }
@@ -105,7 +112,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Navbar page={page} setPage={setPage} setOwnerPage={setOwnerPage} setGuestPage={setGuestPage} />
+      <Navbar page={page} setPage={setPage} setOwnerPage={setOwnerPage} setGame={setGame} />
       {renderPage()}
     </>
   );

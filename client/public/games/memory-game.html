@@ -1,0 +1,305 @@
+<html ng-app="cards">
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<style>
+			.card_container {
+  position: relative;
+  margin: 1px auto;
+  padding: 3px;
+  width: 9em;
+  height: 12em;
+  line-height: 12em;
+  z-index: 1;
+}
+.card_container {
+  -moz-perspective: 1000;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+.card {
+  background-color: #68c39f;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  box-shadow: 0.5px 2.5px #ccc;
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -moz-transition: all .25s linear;
+  -webkit-transition: all .25s linear;
+  transition: all .25s linear;
+  -webkit-backface-visibility: hidden; 
+  backface-visibility: hidden; 
+}
+.flip .card{
+  -moz-transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; 
+  backface-visibility: hidden; 
+}
+.face.back {
+  display: block;
+  color: white;
+  font-size: 7.5em;
+  background-color: #FFCC66;
+  border-radius: 3px;
+  -moz-transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+table {
+	margin: 0px auto;
+}
+
+.timer {
+  display: block;
+  margin: 10px auto;
+  position: relative;
+  width: 150px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #fff;
+  border-radius: 25px;
+  border: 2px solid #1abc9c;
+  font-size: 40px;
+  text-align: center;
+  color: #999;
+}
+
+.startbtn {
+  display: block;
+  margin: 10px auto;
+  position: relative;
+  text-align: center;
+}
+
+.critical {
+  color: red;
+}
+
+.cntr {
+  margin: 15px auto;
+}
+
+.points {
+  position: absolute;
+}
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js" type="text/javascript"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-animate.min.js" type="text/javascript"></script>
+		<script>
+			// constant variables 
+var constants = new (function() {
+    var rows = 3;
+    var columns = 6;
+    var numMatches = (rows * columns) / 2;
+    this.getRows = function() { return rows; };
+    this.getColumns = function() { return columns; };
+    this.getNumMatches = function() { return numMatches; };
+})();
+
+// Global Variables
+var	currentSessionOpen = false;
+var	previousCard = null;
+var numPairs = 0;
+
+// this function creates deck of cards that returns an object of cards 
+// to the caller
+function createDeck() {
+	var rows = constants.getRows();
+	var cols = constants.getColumns();
+	var key = createRandom();
+	var deck = {};
+	deck.rows = [];
+
+	// create each row
+	for(var i = 0; i < rows; i++) {
+		var row = {};
+		row.cards = [];
+		
+		// creat each card in the row
+		for (var j = 0; j < cols; j++) {
+			var card = {};
+			card.isFaceUp = false;
+			card.item = key.pop();
+			row.cards.push(card);
+		}
+		deck.rows.push(row);
+	}
+	return deck;
+}
+
+// used to remove something form an array by index
+function removeByIndex(arr, index) {
+    arr.splice(index, 1);
+}
+
+function insertByIndex(arr, index, item) {
+	arr.splice(index, 0, item);
+}
+
+// creates a random array of items that contain matches
+// for example: [1, 5, 6, 5, 1, 6]
+function createRandom() {
+	var matches = constants.getNumMatches();
+	var pool = [];
+	var answers = [];
+	var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
+					, 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'
+					, 'S', 'T', 'U', 'W', 'X', 'Y', 'Z'];
+	
+	var hiragana = ['あ', 'い', 'う', 'え', 'お', 'か', 'が', 'き'
+					, 'ぎ', 'く', 'ぐ', 'け', 'げ', 'こ', 'ご', 'さ'
+					, 'ざ', 'し', 'じ', 'す', 'ず', 'せ', 'ぜ', 'そ'
+					, 'ぞ', 'た', 'だ', 'ち', 'ぢ', 'つ', 'づ', 'て'
+					, 'で', 'と', 'ど', 'な', 'に', 'ぬ', 'ね', 'の'
+					, 'は', 'ば', 'ぱ', 'ひ', 'び', 'ぴ', 'ふ', 'ぶ'
+					, 'ぷ', 'へ', 'べ', 'ぺ', 'ほ', 'ぼ', 'ぽ', 'ま'
+					, 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら'
+					, 'り', 'る', 'れ', 'ろ', 'わ', 'を', 'ん'];
+	// set what kind of item to display
+	var items = hiragana;
+
+	// create the arrays for random numbers and item holder
+	for (var i = 0; i < matches * 2; i++) {
+		pool.push(i); // random numbers
+	}
+	
+	// generate an array with the random items
+	for (var n = 0; n < matches; n++) {
+		// grab random letter from array and remove that letter from the
+		// original array
+		var randLetter = Math.floor((Math.random() * items.length));
+		var letter = items[randLetter];
+		removeByIndex(items, randLetter);
+		// generate two random placements for each item
+		var randPool = Math.floor((Math.random() * pool.length));
+		
+		// remove the placeholder from answers and insert the letter into 
+		// random slot
+		insertByIndex(answers, pool[randPool], letter);
+		
+		// remove random number from pool
+		removeByIndex(pool, randPool);
+		
+		// redo this process for the second placement
+		randPool = Math.floor((Math.random() * pool.length));
+		insertByIndex(answers, pool[randPool], letter);
+
+		// remove rand number from pool
+		removeByIndex(pool, randPool);
+	}
+	return answers;
+} 
+
+var app = angular.module('cards', ['ngAnimate']);
+
+app.controller("CardController", function($scope, $timeout) {
+	$scope.deck = createDeck();
+	$scope.isGuarding = true;
+	$scope.inGame = false;
+
+	$scope.check = function(card) {
+		if (currentSessionOpen && previousCard != card && previousCard.item == card.item && !card.isFaceUp) {
+			card.isFaceUp = true;
+			previousCard = null;
+			currentSessionOpen = false;
+			numPairs++;
+		} else if(currentSessionOpen && previousCard != card && previousCard.item != card.item && !card.isFaceUp) {
+			$scope.isGuarding = true;
+			card.isFaceUp = true;
+			currentSessionOpen = false;			
+			$timeout(function() {
+				previousCard.isFaceUp = card.isFaceUp = false;
+				previousCard = null;
+				$scope.isGuarding = $scope.timeLimit ? false : true;
+			}, 1000);
+		} else {
+			card.isFaceUp = true;
+			currentSessionOpen = true;
+			previousCard = card;
+		}	
+
+		if (numPairs == constants.getNumMatches()) {
+			$scope.stopTimer();
+		}
+	} //end of check()
+
+	// for the timer
+	$scope.timeLimit = 60000;
+	$scope.isCritical = false;
+	
+	var timer = null;
+
+	// start the timer as soon as the player presses start
+	$scope.start = function(){
+		// I need to fix this redundancy. I initially did not create this
+		// game with a start button.
+		$scope.deck = createDeck();
+		// set the time of 1 minutes and remove the cards guard
+		$scope.timeLimit = 60000;
+		$scope.isGuarding = false;
+		$scope.inGame = true;
+
+		($scope.startTimer =function() {
+			$scope.timeLimit -= 1000;
+			$scope.isCritical = $scope.timeLimit <= 10000 ? true : false;
+			
+			timer = $timeout($scope.startTimer, 1000);
+			if ($scope.timeLimit === 0) {
+				$scope.stopTimer();
+				$scope.isGuarding = true;
+			}
+		})();
+	}	
+	// function to stop the timer
+	$scope.stopTimer = function() {
+	  $timeout.cancel(timer);
+	  $scope.inGame = false;
+	  previousCard = null;
+	  currentSessionOpen = false;
+	  numPairs = 0;
+	}
+
+}); 
+		</script>
+	</head>
+<body>
+	<div class="cntr" ng-controller="CardController">
+		<div class="timer" ng-class="{critical:isCritical}">
+			{{timeLimit | date: 'm:ss'}} 	
+		</div>
+		<table class="table-top">
+			<tr ng-repeat="row in deck.rows">
+				<td ng-repeat="card in row.cards">
+					<div class="card_container {{!card.isFaceUp ? '' : 'flip'}}" ng-click="isGuarding || check(card)" >
+						<div class="card shadow">
+							<div class="front face"></div>
+							<div class="back face text-center pagination-center">
+								<p> {{card.item}} </p>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="startbtn">
+			<button type="button" class="btn btn-default btn-lg" ng-disabled="inGame == true" ng-click="start()">Start</button>
+		</div>
+
+	</div>
+</html>

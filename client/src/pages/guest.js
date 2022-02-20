@@ -1,19 +1,11 @@
 import React from 'react';
 import GuestMap from '../components/guest-map';
-import Snake from '../games/snake';
-import { SNAKE } from '../constants/games';
+import Game from '../components/game';
 
-function Guest({ map, guestPage, setGuestPage }) {
-    const renderGuest = () => {
-        switch (guestPage) {
-            case SNAKE: return <Snake size={350} />;
-            default: return <GuestMap map={map} setGuestPage={setGuestPage} />
-        }
-    }
-
+function Guest({ map, game, setGame }) {
     return (
         <>
-            {renderGuest()}
+            {typeof game === 'undefined' ? <GuestMap map={map} setGame={setGame} /> : <Game game={game} />}
         </>
     )
 }
