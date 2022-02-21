@@ -58,7 +58,7 @@ contract World is ERC721, Ownable {
         require(land.landType == LandType.NFT, 'Only NFT lands can be transfer');
         require(msg.sender != to, 'You cannot transfer land to yourself');
 
-        token.transferFrom(to, msg.sender, land.price);
+        token.transferFrom(to, msg.sender, land.price * (10 ** token.decimals()));
         _transfer(msg.sender, to, land.tokenId);
 
         return true;

@@ -29,25 +29,29 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
     return (
       <ContentContainer>
         <ContentTitle>Content</ContentTitle>
-        <LandType style={{ color: MY_LAND_COLOR}}>My Land</LandType>
-        <LandType style={{ color: LAND_COLOR}}>Land</LandType>
-        <LandType style={{ color: PARK_COLOR}}>Park</LandType>
-        <LandType style={{ color: ROAD_COLOR}}>Road</LandType>
+        <LandType style={{ color: MY_LAND_COLOR }}>My Land</LandType>
+        <LandType style={{ color: LAND_COLOR }}>Land</LandType>
+        <LandType style={{ color: PARK_COLOR }}>Park</LandType>
+        <LandType style={{ color: ROAD_COLOR }}>Road</LandType>
       </ContentContainer>
     )
   }
 
   const approve = async (land) => {
-    await contractToken.methods.approve(land.owner, land.price).send({ from: address });
-    const abc = await contractToken.methods.allowance(address, land.owner).call();
-    console.log(abc);
+    try {
+      await contractToken.methods.approve(contract._address, web3.utils.toWei(land.price.toString(), 'ether')).send({ from: address });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const transferLand = async (land, to) => {
-    const success = await contract.methods.transferLand(land, to).send({ from: address });
-    if (success) {
+    try {
+      await contract.methods.transferLand(land, to).send({ from: address });
       updateMap();
       setModelOpen(false);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -59,10 +63,12 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
       delete land['col'];
     }
 
-    const success = await contract.methods.setLand(land).send({ from: address });
-    if (success) {
+    try {
+      await contract.methods.setLand(land).send({ from: address });
       updateMap();
       setModelOpen(false);
+    } catch (error) {
+      console.log(error);
     }
   }
 

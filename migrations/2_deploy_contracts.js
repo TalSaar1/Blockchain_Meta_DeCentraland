@@ -13,11 +13,11 @@ module.exports = async (deployer) => {
         console.error(err);
         return;
       }
-
+  
       const world = JSON.parse(data);
       world.map(rowLands => {
         rowLands.map(land => {
-          worldInstance.mint(land)
+          worldInstance.mint(land);
         });
       });
     });

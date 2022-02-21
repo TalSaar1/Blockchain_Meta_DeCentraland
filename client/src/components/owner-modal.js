@@ -193,22 +193,24 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transf
                     :
                     ''
                 }
-                {land.landType === LAND_NFT ? 
-                    <Row>
-                        <ColLeft>
-                            <Category>Price</Category>
-                        </ColLeft>
-                        <ColWithRight>
-                            <input type='number' value={land.price} disabled />
-                        </ColWithRight>
-                        <ColRight>
-                            <input type='text' value={TOKEN_SYMBOL} disabled />
-                        </ColRight>
-                    </Row>
+                {land.landType === LAND_NFT ?
+                    <>
+                        <Row>
+                            <ColLeft>
+                                <Category>Price</Category>
+                            </ColLeft>
+                            <ColWithRight>
+                                <input type='number' value={land.price} disabled />
+                            </ColWithRight>
+                            <ColRight>
+                                <input type='text' value={TOKEN_SYMBOL} disabled />
+                            </ColRight>
+                        </Row>
+                        <Button onClick={() => approve(land)}>Approve</Button>
+                    </>
                     :
                     ''
                 }
-                <button onClick={() => approve(land)}>Approve</button>
                 <Button close onClick={onClose}>Close</Button>
             </>
         )
