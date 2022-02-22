@@ -1,6 +1,6 @@
 import React from 'react';
 import GuestMap from '../components/guest-map';
-import Game from '../components/game';
+import Game from './game';
 
 function Guest({ map, game, setGame }) {
     return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import OwnerMap from '../components/owner-map';
-import Wallet from '../components/wallet';
+import Wallet from './wallet';
 import { WALLET } from '../constants/pages';
 
 function Owner({ web3, contract, map, updateMap, ownerPage }) {

@@ -1,4 +1,22 @@
 {
+  "name": "final-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eladshoham1/Blockchain_Meta_DeCentraland.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eladshoham1/Blockchain_Meta_DeCentraland/issues"
+  },
+  "homepage": "https://github.com/eladshoham1/Blockchain_Meta_DeCentraland#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0"
   }
