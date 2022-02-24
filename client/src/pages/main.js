@@ -8,13 +8,13 @@ const Container = styled.div`
   width: 100%;
   margin-top: 60px;
   text-align: center;
+  color: #000000;
 `;
 
 const Header = styled.div`
   font-size: ${props => props.big ? "50px" : "42px"};
   font-weight: bold;
   padding: 20px;
-  color: #000000;
   text-shadow: 2px 2px 8px #ffffff;
 `;
 
@@ -50,6 +50,10 @@ const Button = styled.button`
   }
 `;
 
+const Copyright = styled.div`
+  margin-top: 80px;
+`;
+
 function Main({ setPage }) {
   return (
     <Container>
@@ -60,6 +64,9 @@ function Main({ setPage }) {
         <Button type='button' onClick={() => setPage(OWNER)}>Owner</Button>
         <Button type='button' onClick={() => setPage(GUEST)}>Guset</Button>
       </Buttons>
+      <Copyright>
+        &copy; Copyright Elad Shoham and Tal Saar
+      </Copyright>
     </Container>
   )
 }

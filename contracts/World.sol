@@ -29,7 +29,7 @@ contract World is ERC721, Ownable {
         token = _token;
     }
 
-    function mint(uint8 row, uint8 col, LandType landType, uint256 price) public {
+    function mint(uint8 row, uint8 col, LandType landType, uint256 price) public onlyOwner {
         if (landType == LandType.PARK) {
             require(owner() == _msgSender(), 'Only the owner of the world can mint park');
         } else {

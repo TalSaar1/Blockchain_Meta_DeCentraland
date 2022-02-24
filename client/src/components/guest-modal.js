@@ -20,24 +20,27 @@ function GuestModal({ modalOpen, land, backgroundColor, play, onClose }) {
                         <input type='text' value={land.owner} disabled />
                     </Col>
                 </Row>
-                {land.game !== '' ? 
-                    <Row>
-                        <ColLeft>
-                            <Category>Game</Category>
-                        </ColLeft>
-                        <Col>
-                            <input type='text' value={land.game} disabled />
-                        </Col>
-                    </Row>
+                {typeof land.game !== 'undefined' && land.game !== '' ?
+                    <>
+                        <Row>
+                            <ColLeft>
+                                <Category>Game</Category>
+                            </ColLeft>
+                            <Col>
+                                <input type='text' value={land.game} disabled />
+                            </Col>
+                        </Row>
+                        <Button onClick={() => play(land)}>Play</Button>
+                    </>
                     :
                     ''
                 }
                 <Button close onClick={onClose}>Close</Button>
-                {land.game !== '' ?  <Button onClick={() => play(land)}>Play</Button> : '' }
             </Container>
         </WrapperContainer>,
         document.getElementById('portal')
     )
 }
+
 
 export default GuestModal;

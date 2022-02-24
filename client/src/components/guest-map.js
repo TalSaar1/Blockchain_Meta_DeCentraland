@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ColLands from './col-lands';
+import RowLands from './row-lands';
 import GuestModal from './guest-modal';
 import { MapContainer, ContentContainer, ContentTitle, LandType } from '../style/map';
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
@@ -49,7 +49,7 @@ function GuestMap({ map, setGame }) {
       {renderContent()}
       <MapContainer>
         {map.length > 0 ? map.map((lands, col) => {
-          return <ColLands
+          return <RowLands
             key={col}
             lands={lands}
             backgroundColor={backgroundColor}

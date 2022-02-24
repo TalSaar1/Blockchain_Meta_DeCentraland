@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const MapContainer = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
+  max-width: 100%;
+  margin: 30px 100px;
 `;
 
 export const ContentContainer = styled.div`

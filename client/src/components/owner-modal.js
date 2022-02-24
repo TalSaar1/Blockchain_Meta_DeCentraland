@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
 import { WrapperContainer, Container, LandType, Button, Tabs, Tab, Content } from '../style/modal';
 import { LAND_NFT, LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
-import { TOKEN_SYMBOL, SYSTEM_ADDRESS } from '../constants/symbols';
+import { TOKEN_SYMBOL } from '../constants/symbols';
 import { games } from '../constants/games';
 
 function OwnerModal({ modalOpen, land, backgroundColor, address, approve, mint, transferLand, updateLand, onClose }) {
@@ -123,6 +123,22 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, mint, 
     }
 
     const renderMyLand = () => {
+        if (typeof land.tokenId === 'undefined' && land.landType !== LAND_ROAD) {
+            return (
+                <>
+                    <Row>
+                        <ColLeft>
+                            <Category>Owner</Category>
+                        </ColLeft>
+                        <Col>
+                            <input type='text' value={land.owner} disabled />
+                        </Col>
+                    </Row>
+                    <Button close onClick={onClose}>Close</Button>
+                    <Button onClick={() => mint(land)}>Mint</Button>
+                </>
+            )
+        }
         if (land.landType !== LAND_NFT) {
             return (
                 <>
@@ -178,7 +194,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, mint, 
                         <Category>Owner</Category>
                     </ColLeft>
                     <Col>
-                        <input type='text' value={typeof land.owner === 'undefined' ? SYSTEM_ADDRESS : land.owner} disabled />
+                        <input type='text' value={land.owner} disabled />
                     </Col>
                 </Row>
                 {land.landType !== LAND_ROAD && land.game !== '' ? 
@@ -206,11 +222,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, mint, 
                                 <input type='text' value={TOKEN_SYMBOL} disabled />
                             </ColRight>
                         </Row>
-                        {typeof land.owner === 'undefined' ? 
-                            <Button onClick={() => mint(land)}>Mint</Button>
-                            :
-                            <Button onClick={() => approve(land)}>Approve</Button>
-                        }
+                        <Button onClick={() => approve(land)}>Approve</Button>
                     </>
                     :
                     ''

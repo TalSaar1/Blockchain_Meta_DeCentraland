@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ColLands from './col-lands';
+import RowLands from './row-lands';
 import OwnerModal from './owner-modal';
 import { MapContainer, ContentContainer, ContentTitle, LandType } from '../style/map';
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
@@ -47,6 +47,10 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   }
 
   const mint = async (land) => {
+    if (land.landType === LAND_PARK) {
+      land.price = 0;
+    }
+    
     try {
       await contract.methods.mint(land.row, land.col, land.landType, land.price).send({ from: address });
       updateMap();
@@ -58,7 +62,7 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
 
   const transferLand = async (land, to) => {
     try {
-      await contract.methods.transferLand(land, to).send({ from: address });
+      await contract.methods.transferLand(land.tokenId, to).send({ from: address });
       updateMap();
       setModelOpen(false);
     } catch (error) {
@@ -67,6 +71,10 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   }
 
   const updateLand = async (land) => {
+    if (typeof land.owner !== 'undefined') {
+      delete land.owner;
+    }
+
     try {
       await contract.methods.setLand(land).send({ from: address });
       updateMap();
@@ -83,7 +91,7 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   const backgroundColor = (land) => {
     switch (land.landType) {
       case LAND_NFT:
-        return typeof address !== 'undefined' && land.owner === address ? MY_LAND_COLOR : LAND_COLOR;
+        return typeof land.tokenId !== 'undefined' && land.owner === address ? MY_LAND_COLOR : LAND_COLOR;
       case LAND_PARK:
         return PARK_COLOR;
       case LAND_ROAD:
@@ -98,7 +106,7 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
       {renderContent()}
       <MapContainer>
         {map.length > 0 ? map.map((lands, col) => {
-          return <ColLands
+          return <RowLands
             key={col}
             lands={lands}
             backgroundColor={backgroundColor}

@@ -73,13 +73,14 @@ function App() {
       return;
     }
 
+    const owner = await contract.methods.owner().call();
     const map = [];
     const size = Math.sqrt(world.length);
 
     for (let i = 0; i < size; i++) {
       const row = [];
       for (let j = 0; j < size; j++) {
-        row.push(world[i * size + j]);
+        row.push({ ...world[i * size + j], owner });
       }
       map.push(row);
     }
@@ -91,7 +92,10 @@ function App() {
       const tokens = response[1];
 
       for (let i = 0; i < numOfTokens; i++) {
-        map[tokens[i].row][tokens[i].col] = { ...tokens[i], owner: owners[i] };
+        map[tokens[i].row][tokens[i].col].tokenId = Number(tokens[i].tokenId);
+        map[tokens[i].row][tokens[i].col].owner = owners[i];
+        map[tokens[i].row][tokens[i].col].game = tokens[i].game;
+        map[tokens[i].row][tokens[i].col].price = Number(tokens[i].price);
       }
     }
 
