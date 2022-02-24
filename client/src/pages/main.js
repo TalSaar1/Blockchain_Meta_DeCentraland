@@ -12,7 +12,10 @@ const Container = styled.div`
 
 const Header = styled.div`
   font-size: ${props => props.big ? "50px" : "42px"};
+  font-weight: bold;
   padding: 20px;
+  color: #000000;
+  text-shadow: 2px 2px 8px #ffffff;
 `;
 
 const Buttons = styled.div`
@@ -23,6 +26,7 @@ const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   margin: 10px;
+  margin-top: 80px;
 `;
 
 const Button = styled.button`
@@ -32,8 +36,8 @@ const Button = styled.button`
   font-family: inherit;
   font-size: 20px;
   font-weight: 700;
-  background-color: #66ff99;
-  border: 0;
+  background-color: #e1ddd5;
+  border: 2px solid #707070;
   border-radius: 35px;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.08);
   cursor: pointer;
@@ -49,7 +53,7 @@ const Button = styled.button`
 function Main({ setPage }) {
   return (
     <Container>
-      <Header big>Welcome to Meta DeCentraland</Header>
+      <Header big>Welcome to Meta Decentraland</Header>
       <Header small>Enter As:<Header/>
       </Header>
       <Buttons>

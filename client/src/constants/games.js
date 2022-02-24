@@ -6,5 +6,8 @@ export const games = [
     'memory-game',
     'ping-pong',
     'snake',
-    'tic-tac-toe'
+    'tic-tac-toe',
+    'mini-car-game',
+    'webmine',
+    'avoid-the-bikes'
 ];

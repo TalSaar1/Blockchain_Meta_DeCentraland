@@ -2,40 +2,53 @@
 pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
+import "@openzeppelin/contracts/utils/Counters.sol";
 import '@openzeppelin/contracts/access/Ownable.sol';
 import './Token.sol';
 
 enum LandType { NFT, PARK, ROAD }
 
 contract World is ERC721, Ownable {
+    using Counters for Counters.Counter;
+
+    Counters.Counter private _tokenIds;
+    Token private token;
+
     struct Land {
         uint256 tokenId;
+        uint8 row;
+        uint8 col;
         LandType landType;
         string game;
         uint256 price;
     }
 
-    Token private token;
-    uint256 private numOfTokens;
-
     mapping(uint256 => Land) private lands;
 
     constructor(Token _token) ERC721('Land', 'LAND') Ownable() {
         token = _token;
-        numOfTokens = 0;
     }
 
-    function mint(Land memory land) public onlyOwner {
-        numOfTokens = land.tokenId;
-        _mint(msg.sender, land.tokenId);
-        setLand(land);
+    function mint(uint8 row, uint8 col, LandType landType, uint256 price) public {
+        if (landType == LandType.PARK) {
+            require(owner() == _msgSender(), 'Only the owner of the world can mint park');
+        } else {
+            require(landType == LandType.NFT);
+        }
+
+        _tokenIds.increment();
+
+        uint256 tokenId = _tokenIds.current();
+        _mint(_msgSender(), tokenId);
+        setLand(Land(tokenId, row, col, landType, '', price));
     }
 
     function getTokensCount() public view returns (uint256) {
-        return numOfTokens;
+        return _tokenIds.current();
     }
 
     function getMap() public view returns (address[] memory, Land[] memory) {
+        uint256 numOfTokens = getTokensCount();
         address[] memory owners = new address[](numOfTokens);
         Land[] memory map = new Land[](numOfTokens);
 
@@ -54,13 +67,11 @@ contract World is ERC721, Ownable {
         lands[land.tokenId] = land;
     }
 
-    function transferLand(Land memory land, address to) public payable returns (bool) {
-        require(land.landType == LandType.NFT, 'Only NFT lands can be transfer');
-        require(msg.sender != to, 'You cannot transfer land to yourself');
+    function transferLand(uint256 tokenId, address to) public payable {
+        require(lands[tokenId].landType == LandType.NFT, 'Only NFT lands can be transfer');
+        require(_msgSender() != to, 'You cannot transfer land to yourself');
 
-        token.transferFrom(to, msg.sender, land.price * (10 ** token.decimals()));
-        _transfer(msg.sender, to, land.tokenId);
-
-        return true;
+        token.transferFrom(to, _msgSender(), lands[tokenId].price * (10 ** token.decimals()));
+        _transfer(_msgSender(), to, tokenId);
     }
 }

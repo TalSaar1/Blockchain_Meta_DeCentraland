@@ -4,10 +4,10 @@ import Web3 from 'web3';
 import { Category, Row, ColLeft, Col, ColWithRight, ColRight } from '../style/table';
 import { WrapperContainer, Container, LandType, Button, Tabs, Tab, Content } from '../style/modal';
 import { LAND_NFT, LAND_PARK, LAND_ROAD, LAND_TYPE } from '../constants/types';
-import { TOKEN_SYMBOL } from '../constants/symbols';
+import { TOKEN_SYMBOL, SYSTEM_ADDRESS } from '../constants/symbols';
 import { games } from '../constants/games';
 
-function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transferLand, updateLand, onClose }) {
+function OwnerModal({ modalOpen, land, backgroundColor, address, approve, mint, transferLand, updateLand, onClose }) {
     const [newLand, setNewLand] = useState(undefined);
     const [allAddress, setAllAddress] = useState([]);
     const [toAddress, setToAddress] = useState(undefined);
@@ -178,7 +178,7 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transf
                         <Category>Owner</Category>
                     </ColLeft>
                     <Col>
-                        <input type='text' value={land.owner} disabled />
+                        <input type='text' value={typeof land.owner === 'undefined' ? SYSTEM_ADDRESS : land.owner} disabled />
                     </Col>
                 </Row>
                 {land.landType !== LAND_ROAD && land.game !== '' ? 
@@ -206,7 +206,11 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transf
                                 <input type='text' value={TOKEN_SYMBOL} disabled />
                             </ColRight>
                         </Row>
-                        <Button onClick={() => approve(land)}>Approve</Button>
+                        {typeof land.owner === 'undefined' ? 
+                            <Button onClick={() => mint(land)}>Mint</Button>
+                            :
+                            <Button onClick={() => approve(land)}>Approve</Button>
+                        }
                     </>
                     :
                     ''
@@ -215,79 +219,10 @@ function OwnerModal({ modalOpen, land, backgroundColor, address, approve, transf
             </>
         )
     }
-
  
     const renderLandType = () => {
         return address === land.owner ? renderMyLand() : renderOwnerLand();
     }
-
-    /*const renderLandType = () => {
-        if (land.landType !== LAND_ROAD) {
-            return (
-                <>
-                    {land.owner === address ?
-                        <Row>
-                            <ColLeft>
-                                <Category>Game</Category>
-                            </ColLeft>
-                            <Col>
-                                <select defaultValue={land.game} onChange={e => setNewLand({ ...newLand, game: e.target.value })}>
-                                    {allGames.map((option, index) => <option key={index} value={option}>{option}</option>)}
-                                </select>
-                            </Col>
-                        </Row>
-                        : typeof land.game !== 'undefined' ?
-                            <Row>
-                                <ColLeft>
-                                    <Category>Game</Category>
-                                </ColLeft>
-                                <Col>
-                                    <input type='text' value={land.game} disabled />
-                                </Col>
-                            </Row>
-                        : ''
-                    }
-                    {typeof address !== 'undefined' && land.landType !== LAND_PARK ?
-                        <Row>
-                            <ColLeft>
-                                <Category>Price</Category>
-                            </ColLeft>
-                            <ColWithRight>
-                                <input 
-                                    type='number'
-                                    defaultValue={land.price}
-                                    onChange={e => setNewLand({ ...newLand, price: Number(e.target.value) })}
-                                    disabled={address !== land.owner}
-                                    style={{ color: address !== land.owner ? '#ffffff' : '#000000' }}
-                                />
-                            </ColWithRight>
-                            <ColRight>
-                                <input type='text' value={TOKEN_SYMBOL} disabled />
-                            </ColRight>
-                        </Row>
-                        :
-                        ''
-                    }
-                </>
-            )
-        }
-    }*/
-
-    /*const functionButton = () => {
-        if (typeof address === 'undefined') {
-            if (land.game !== '') {
-                return (<Button onClick={() => play(land)}>Play</Button>);
-            }
-        } else if (address === land.owner) {
-            return (
-                <>
-                    <Button onClick={() => updateLand(newLand)}>Update</Button>
-                    <Button onClick={() => transferLand(land, toAddress)}>Transfer</Button>
-                </>
-            );
-        }
-        return <></>;
-    }*/
 
     if (!modalOpen)
         return null;

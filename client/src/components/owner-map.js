@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import RowLands from './row-lands';
+import ColLands from './col-lands';
 import OwnerModal from './owner-modal';
 import { MapContainer, ContentContainer, ContentTitle, LandType } from '../style/map';
 import { LAND_NFT, LAND_PARK, LAND_ROAD } from '../constants/types';
-import { MY_LAND_COLOR, LAND_COLOR, GAME_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
+import { MY_LAND_COLOR, LAND_COLOR, PARK_COLOR, ROAD_COLOR, BLACK_COLOR } from '../constants/colors';
 
 import TokenContract from '../contracts/Token.json';
 
@@ -40,6 +40,17 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   const approve = async (land) => {
     try {
       await contractToken.methods.approve(contract._address, web3.utils.toWei(land.price.toString(), 'ether')).send({ from: address });
+      setModelOpen(false);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const mint = async (land) => {
+    try {
+      await contract.methods.mint(land.row, land.col, land.landType, land.price).send({ from: address });
+      updateMap();
+      setModelOpen(false);
     } catch (error) {
       console.log(error)
     }
@@ -56,13 +67,6 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   }
 
   const updateLand = async (land) => {
-    if (typeof land.row !== 'undefined') {
-      delete land['row'];
-    }
-    if (typeof land.col !== 'undefined') {
-      delete land['col'];
-    }
-
     try {
       await contract.methods.setLand(land).send({ from: address });
       updateMap();
@@ -79,7 +83,7 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
   const backgroundColor = (land) => {
     switch (land.landType) {
       case LAND_NFT:
-        return typeof address !== 'undefined' && land.owner === address ? MY_LAND_COLOR : typeof address === 'undefined' && land.content !== '' ? GAME_COLOR : LAND_COLOR;
+        return typeof address !== 'undefined' && land.owner === address ? MY_LAND_COLOR : LAND_COLOR;
       case LAND_PARK:
         return PARK_COLOR;
       case LAND_ROAD:
@@ -93,16 +97,15 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
     <>
       {renderContent()}
       <MapContainer>
-        {map.map((lands, row) => {
-          return <RowLands
-            key={row}
-            row={row}
+        {map.length > 0 ? map.map((lands, col) => {
+          return <ColLands
+            key={col}
             lands={lands}
             backgroundColor={backgroundColor}
             setSelectedLand={setSelectedLand}
             owner={true}
           />
-        })}
+        }) : 'Loading the map ...' }
       </MapContainer>
 
       <OwnerModal
@@ -111,6 +114,7 @@ function OwnerMap({ web3, address, contract, map, updateMap }) {
         backgroundColor={backgroundColor}
         address={address}
         approve={approve}
+        mint={mint}
         transferLand={transferLand}
         updateLand={updateLand}
         onClose={() => setModelOpen(false)}

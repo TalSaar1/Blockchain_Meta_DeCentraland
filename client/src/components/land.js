@@ -12,9 +12,9 @@ const Container = styled.div`
     cursor: pointer;
 `;
 
-function Land({ row, col, land, backgroundColor, setSelectedLand, owner }) {
+function Land({ land, backgroundColor, setSelectedLand, owner }) {
     const toolTipText = () => {
-        let text = LAND_TYPE[land.landType] + ' (' + row + ',' + col + ') ';
+        let text = LAND_TYPE[land.landType] + ' (' + land.row + ',' + land.col + ') ';
 
         if (owner && land.landType === LAND_NFT) {
             text += 'Price: ' + land.price + ' ' + TOKEN_SYMBOL;
@@ -29,7 +29,7 @@ function Land({ row, col, land, backgroundColor, setSelectedLand, owner }) {
         <ToolTip toolTipText={toolTipText()}>
             <Container
                 backgroundColor={() => backgroundColor(land)}
-                onClick={() => setSelectedLand({ ...land, row, col })}
+                onClick={() => setSelectedLand(land)}
             />
         </ToolTip>
     )

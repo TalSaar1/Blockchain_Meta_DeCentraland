@@ -5,14 +5,15 @@ import { MAIN, OWNER, GUEST, MAP, WALLET } from '../constants/pages';
 const NavBarContainer = styled.div`
     border-bottom: 2px solid #ffffff;
     position: relative;
-    background: #121212;
+    background-image: linear-gradient(to left top, #8eb9e7, #78c0e5, #69c6dd, #67cbcf, #73cebe, #6fc2b3, #6cb6a8, #68aa9d, #588e8f, #4f727a, #47575f, #3c3f42);
+    background-attachment: fixed;
     color: #ffffff;
     height: 100px;
     width: 100%;
 `;
 
 const Title = styled.div`
-    text-shadow: 2px 2px 8px #ff0000;
+    text-shadow: 2px 2px 8px #00c0c0;
     font-size: 40px;
     font-weight: bold;
     margin-right: 40px;
@@ -32,11 +33,11 @@ const NavBarLinks = styled.div`
 const Button = styled.div`
     margin-top: 10px;
     margin-left: 70px;
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
 
     &:hover {
-        text-shadow: 2px 2px 4px #FF0000;
+        text-shadow: 2px 2px 4px #00c0c0;
     }
 `;
 

@@ -4,7 +4,6 @@ export const MapContainer = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
-  flex-direction: row;
 `;
 
 export const ContentContainer = styled.div`
@@ -12,20 +11,19 @@ export const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   background: #ffffff;
-  border-bottom: 2px solid #000000;
-  height: 30px;
+  height: 38px;
+  font-weight: bold;
 `;
 
 export const ContentTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 22px;
   margin: auto 0;
   margin-left: 10px;
   color: #000000;
 `;
 
 export const LandType = styled.div`
-  font-size: 18px;
+  font-size: 20px;
   margin: auto 0;
   margin-left: 35px;
 `;

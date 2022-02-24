@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import WorldContract from './contracts/World.json';
+import world from './map.json';
 import getWeb3 from './getWeb3';
 import Main from './pages/main';
 import Navbar from './components/navbar';
@@ -10,7 +11,8 @@ import { OWNER, GUEST, MAP } from './constants/pages';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    background: #505050;
+    background-image: linear-gradient(to right bottom, #8eb9e7, #78c0e5, #69c6dd, #67cbcf, #73cebe, #6fc2b3, #6cb6a8, #68aa9d, #588e8f, #4f727a, #47575f, #3c3f42);
+    background-attachment: fixed;
     color: #ffffff;
     margin: 0;
   }
@@ -30,9 +32,9 @@ const GlobalStyle = createGlobalStyle`
 
   iframe {
     position: absolute;
-    bottom: 0;
     width: 100%;
     height: calc(100% - 102px);
+    border: none;
   }
 `;
 
@@ -71,21 +73,26 @@ function App() {
       return;
     }
 
-    const size = Math.sqrt(await contract.methods.getTokensCount().call());
-    const response = await contract.methods.getMap().call();
-    const owners = response[0];
-    const tokens = response[1];
     const map = [];
+    const size = Math.sqrt(world.length);
 
     for (let i = 0; i < size; i++) {
       const row = [];
-
       for (let j = 0; j < size; j++) {
-        const land = tokens[i * size + j];
-        row.push({ ...land, owner: owners[i * size + j]});
+        row.push(world[i * size + j]);
       }
-
       map.push(row);
+    }
+
+    const numOfTokens = await contract.methods.getTokensCount().call();
+    if (numOfTokens > 0) {
+      const response = await contract.methods.getMap().call();
+      const owners = response[0];
+      const tokens = response[1];
+
+      for (let i = 0; i < numOfTokens; i++) {
+        map[tokens[i].row][tokens[i].col] = { ...tokens[i], owner: owners[i] };
+      }
     }
 
     setMap(map);
